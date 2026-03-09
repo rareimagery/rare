@@ -24,6 +24,8 @@ services:
       - APACHE_RUN_USER=www-data
       - APACHE_RUN_GROUP=www-data
       - XAI_API_KEY=${XAI_API_KEY}
+      - X_CONSUMER_KEY=${X_CONSUMER_KEY}
+      - X_CONSUMER_SECRET=${X_CONSUMER_SECRET}
     volumes:
       - ./web:/var/www/html
     ports:
