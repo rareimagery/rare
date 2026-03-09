@@ -15,74 +15,44 @@ sudo apt install docker.io docker-compose-plugin git curl ufw -y
 sudo usermod -aG docker $USER
 newgrp docker
 
-# 2. Create project folder
+# 2. Create project folder & clone repo
 sudo mkdir -p /var/www/rareimagery-marketplace
 sudo chown $USER:$USER /var/www/rareimagery-marketplace
+git clone https://github.com/rareimagery/rare.git /var/www/rareimagery-marketplace
 cd /var/www/rareimagery-marketplace
 
-# 3. Clone your code (or create repo first if you don't have one)
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git .   # ← change to your repo
-# If no repo yet: git init && git remote add origin YOUR-URL
+# 3. Create .env from template (edit with your real keys)
+cp .env.example .env
+nano .env
+# ↑ Set POSTGRES_PASSWORD, XAI_API_KEY, X_CONSUMER_KEY, X_CONSUMER_SECRET
+#   Save: Ctrl+O, Enter, Ctrl+X
 
-# 4. Create docker-compose.yml
-cat > docker-compose.yml << 'EOF'
-version: '3.9'
-
-services:
-  drupal:
-    image: drupal:10.3-apache
-    container_name: rareimagery-drupal
-    restart: unless-stopped
-    ports:
-      - "8080:80"                    # change to 80 later for direct access
-    volumes:
-      - ./drupal:/var/www/html
-    environment:
-      - XAI_API_KEY=${XAI_API_KEY}
-    depends_on:
-      - postgres
-    networks:
-      - marketplace-net
-
-  postgres:
-    image: postgres:16-alpine
-    container_name: rareimagery-postgres
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: rareimagery
-      POSTGRES_USER: drupal
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    networks:
-      - marketplace-net
-
-networks:
-  marketplace-net:
-    driver: bridge
-
-volumes:
-  postgres-data:
-EOF
-
-# 5. Create .env (fill your keys)
-cat > .env << 'EOF'
-XAI_API_KEY=your_xai_key_from_console.x.ai_here
-POSTGRES_PASSWORD=SuperStrongPassword123!ChangeThis
-EOF
-
-# 6. Firewall & start everything
+# 4. Firewall & start everything
 sudo ufw allow 22
+sudo ufw allow 80
+sudo ufw allow 443
 sudo ufw allow 8080
-sudo ufw allow 5432
 sudo ufw --force enable
 docker compose up -d
 
-# 7. Done!
-echo "✅ Done! Open http://YOUR_SERVER_IP:8080 in browser and run the Drupal installer"
+# 5. Done!
+echo "Done! Open http://YOUR_SERVER_IP:8080 in browser and run the Drupal installer"
 ```
+
+---
+
+## Drupal Installer Settings (in browser)
+
+When you open `http://YOUR_SERVER_IP:8080`, use these DB settings:
+
+| Field | Value |
+|-------|-------|
+| Database type | PostgreSQL |
+| Database name | rare_drupal |
+| Database user | rare_user |
+| Database password | *(from your .env)* |
+| Host | postgres |
+| Port | 5432 |
 
 ---
 
@@ -91,6 +61,7 @@ echo "✅ Done! Open http://YOUR_SERVER_IP:8080 in browser and run the Drupal in
 Run these inside the container:
 
 ```bash
+cd /var/www/rareimagery-marketplace
 docker compose exec drupal composer require drupal/ai drupal/ai_provider_x drupal/key
 docker compose exec drupal drush en ai ai_provider_x key -y
 docker compose exec drupal drush cr
@@ -102,7 +73,7 @@ Grok is now connected. Follow the "Creator Store Owner Guide" to create the stor
 
 ## Push Code Going Forward
 
-Every time you edit locally or in GitHub:
+Every time you edit locally:
 
 ```bash
 git add .
@@ -113,6 +84,7 @@ git push
 Then on the server:
 
 ```bash
+cd /var/www/rareimagery-marketplace
 git pull && docker compose up -d --build
 ```
 
@@ -122,10 +94,10 @@ git pull && docker compose up -d --build
 
 | Component | Version | Purpose |
 |-----------|---------|---------|
-| Drupal | 10.3-apache | CMS / storefront engine |
+| Drupal | 10.3-php8.3-apache | CMS / storefront engine |
 | PostgreSQL | 16-alpine | Database |
 | Grok (xAI) | API via `ai_provider_x` | Auto-import X profile data |
-| Docker Compose | v3.9 | Container orchestration |
+| Docker Compose | v2 | Container orchestration |
 
 ---
 
@@ -134,7 +106,6 @@ git pull && docker compose up -d --build
 To continue setup, provide:
 
 - **Server public IP** — for exact browser URLs
-- **GitHub repo URL** — for precise clone/push commands
 - **Main domain** (e.g. `rareimagery.net`) — for domain pointing + SSL
 
 This unlocks:
