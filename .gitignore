@@ -14,3 +14,6 @@ frontend/.env.local
 .env
 *.log
 .DS_Store
+
+# Secrets
+x-consumer-key.txt
