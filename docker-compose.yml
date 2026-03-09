@@ -2,34 +2,43 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: rare-postgres
-    restart: always
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: rare_drupal
-      POSTGRES_USER: rare_user
-      POSTGRES_PASSWORD: rare_pass_2026
+      POSTGRES_DB: ${POSTGRES_DB:-rare_drupal}
+      POSTGRES_USER: ${POSTGRES_USER:-rare_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"  # We use 5433 so it never conflicts
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - marketplace-net
 
   drupal:
     image: drupal:10.3-php8.3-apache
     container_name: rare-drupal
-    restart: always
+    restart: unless-stopped
     depends_on:
       - postgres
     environment:
       - APACHE_RUN_USER=www-data
       - APACHE_RUN_GROUP=www-data
+      - XAI_API_KEY=${XAI_API_KEY}
     volumes:
       - ./web:/var/www/html
     ports:
-      - "8080:80"
+      - "${DRUPAL_PORT:-8080}:80"
     command: >
-      bash -c "apt-get update && apt-get install -y git unzip && 
-               composer self-update && 
-               chown -R www-data:www-data /var/www/html && 
+      bash -c "apt-get update && apt-get install -y git unzip &&
+               composer self-update &&
+               chown -R www-data:www-data /var/www/html &&
                apache2-foreground"
+    networks:
+      - marketplace-net
+
+networks:
+  marketplace-net:
+    driver: bridge
 
 volumes:
   postgres_data:

@@ -11,5 +11,6 @@ frontend/out/
 frontend/.env.local
 
 # Docker
+.env
 *.log
 .DS_Store
