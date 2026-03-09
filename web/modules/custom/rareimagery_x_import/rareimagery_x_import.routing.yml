@@ -1,0 +1,15 @@
+rareimagery_x_import.import_form:
+  path: '/admin/rareimagery/x-import'
+  defaults:
+    _form: '\Drupal\rareimagery_x_import\Form\XProfileImportForm'
+    _title: 'Import X Profile with Grok'
+  requirements:
+    _permission: 'administer site configuration'
+
+rareimagery_x_import.settings_form:
+  path: '/admin/config/rareimagery/x-import'
+  defaults:
+    _form: '\Drupal\rareimagery_x_import\Form\XImportSettingsForm'
+    _title: 'X Import Settings'
+  requirements:
+    _permission: 'administer site configuration'

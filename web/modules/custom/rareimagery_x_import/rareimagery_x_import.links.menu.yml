@@ -1,0 +1,12 @@
+rareimagery_x_import.import_form:
+  title: 'Import X Profile'
+  description: 'Import an X creator profile using Grok AI'
+  route_name: rareimagery_x_import.import_form
+  parent: system.admin
+  weight: -5
+
+rareimagery_x_import.settings_form:
+  title: 'X Import Settings'
+  description: 'Configure X API and Grok settings'
+  route_name: rareimagery_x_import.settings_form
+  parent: system.admin_config

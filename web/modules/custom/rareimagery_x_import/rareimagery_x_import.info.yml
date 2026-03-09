@@ -1,0 +1,9 @@
+name: 'RareImagery X Import'
+type: module
+description: 'One-click X profile import via Grok AI for Creator Stores'
+core_version_requirement: ^10
+package: RareImagery
+dependencies:
+  - node
+  - commerce_store
+  - key

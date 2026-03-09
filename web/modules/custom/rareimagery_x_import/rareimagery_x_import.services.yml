@@ -1,0 +1,7 @@
+services:
+  rareimagery_x_import.x_api:
+    class: Drupal\rareimagery_x_import\Service\XApiService
+    arguments: ['@http_client', '@config.factory', '@logger.factory']
+  rareimagery_x_import.grok:
+    class: Drupal\rareimagery_x_import\Service\GrokService
+    arguments: ['@http_client', '@config.factory', '@logger.factory']
