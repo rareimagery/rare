@@ -8,67 +8,105 @@
 $x_api = \Drupal::service('rareimagery_x_import.x_api');
 $grok = \Drupal::service('rareimagery_x_import.grok');
 
-$username = 'rareimagery';
+$usernames = ['elonmusk', 'alphafox', 'clownworld', 'doctorclownphd', 'ksjcreative'];
 
-echo "=== Testing X Import for @{$username} ===\n\n";
+echo "=== Creating 5 Demo Creator X Profiles ===\n\n";
 
-// Step 1: Fetch profile from X API
-echo "1. Fetching X profile...\n";
-$profile = $x_api->getUserProfile($username);
+foreach ($usernames as $username) {
+  echo "\n--- Processing @{$username} ---\n";
 
-if (empty($profile)) {
-  echo "   X API could not fetch profile (API access may be limited).\n";
-  echo "   Consumer Key present: " . (getenv('X_CONSUMER_KEY') ? 'YES' : 'NO') . "\n";
-  echo "   Creating sample profile with realistic mock data...\n\n";
+  // Mock profile data from X scrape
+  $mock_profiles = [
+    'elonmusk' => [
+      'name' => 'Elon Musk',
+      'bio' => 'CEO of Tesla, SpaceX, xAI. Building the future.',
+      'followers' => 236200000,
+      'top_posts' => [
+        ['text' => 'Only Grok speaks the truth. Only truthful AI is safe.', 'likes' => 14000, 'retweets' => 13000],
+        ['text' => 'Next I’m buying Coca-Cola to put the cocaine back in', 'likes' => 168000, 'retweets' => 755000],
+        ['text' => 'The future is gonna be so 🔥 🇺🇸', 'likes' => 57000, 'retweets' => 212000],
+      ],
+      'followers_sample' => [
+        ['username' => 'tesla', 'name' => 'Tesla', 'followers' => 20000000],
+        ['username' => 'spacex', 'name' => 'SpaceX', 'followers' => 40000000],
+      ],
+      'metrics' => ['engagement_score' => 95, 'audience_quality' => 'elite', 'summary' => 'World\\'s biggest influencer. Massive buying power.'],
+    ],
+    'alphafox' => [
+      'name' => 'AlphaFox',
+      'bio' => 'X Fox 🦊✝️ Earth',
+      'followers' => 830900,
+      'top_posts' => [
+        ['text' => 'Never empty your mag into a lawn mower filled with tannerite unless you don’t require legs 😨', 'likes' => 287, 'retweets' => 303],
+        ['text' => 'Marshmallow egg prank 😬', 'likes' => 2500, 'retweets' => 15000],
+      ],
+      'followers_sample' => [
+        ['username' => 'prankster1', 'name' => 'Prankster', 'followers' => 50000],
+      ],
+      'metrics' => ['engagement_score' => 85, 'audience_quality' => 'high', 'summary' => 'Viral prank content creator.'],
+    ],
+    'clownworld' => [
+      'name' => 'Clown World ™ 🤡',
+      'bio' => 'The circus never stops. Uploads daily. DM for credit 📩',
+      'followers' => 3100000,
+      'top_posts' => [
+        ['text' => 'Markets now show a 40% chance of a Democratic sweep in 2028.', 'likes' => 391, 'retweets' => 41],
+        ['text' => 'Thoughts? (image post)', 'likes' => 6300, 'retweets' => 24000],
+      ],
+      'followers_sample' => [
+        ['username' => 'kalshi', 'name' => 'Kalshi', 'followers' => 100000],
+      ],
+      'metrics' => ['engagement_score' => 88, 'audience_quality' => 'engaged', 'summary' => 'Political meme powerhouse with own store.'],
+    ],
+    'doctorclownphd' => [
+      'name' => 'Doctor 🤡',
+      'bio' => 'Laughter is the best medicine 💊 🤡🤣',
+      'followers' => 8,
+      'top_posts' => [],
+      'followers_sample' => [],
+      'metrics' => ['engagement_score' => 10, 'audience_quality' => 'new', 'summary' => 'Emerging clown doctor content.'],
+    ],
+    'ksjcreative' => [
+      'name' => 'KSJ Creative (Mock - Account not found)',
+      'bio' => 'Creative agency for digital innovation.',
+      'followers' => 5000,
+      'top_posts' => [
+        ['text' => 'New creative project launch!', 'likes' => 100, 'retweets' => 20],
+      ],
+      'followers_sample' => [],
+      'metrics' => ['engagement_score' => 60, 'audience_quality' => 'medium', 'summary' => 'Mock creative profile.'],
+    ],
+  ];
+
+  $mock = $mock_profiles[$username] ?? $mock_profiles['ksjcreative'];
 
   $node = \Drupal::entityTypeManager()->getStorage('node')->create([
     'type' => 'creator_x_profile',
-    'title' => 'RareImagery - X Profile (Sample)',
+    'title' => $mock['name'] . ' - X Profile (Demo)',
     'status' => 1,
-    'field_x_username' => 'rareimagery',
+    'field_x_username' => $username,
     'field_bio_description' => [
-      'value' => '<p>Digital art & rare imagery. Building the X creator marketplace. Curating the extraordinary.</p>',
+      'value' => '<p>' . htmlspecialchars($mock['bio']) . '</p>',
       'format' => 'basic_html',
     ],
-    'field_follower_count' => 2847,
-    'field_top_posts' => [
-      ['value' => json_encode(['text' => 'Just launched the X Creator Marketplace - every creator gets their own branded store', 'likes' => 342, 'retweets' => 89, 'score' => 95])],
-      ['value' => json_encode(['text' => 'Grok AI now auto-imports your entire X profile into your store. One click.', 'likes' => 256, 'retweets' => 67, 'score' => 88])],
-      ['value' => json_encode(['text' => 'Rare digital art drops every Friday. This week: Neon Dreams collection', 'likes' => 198, 'retweets' => 45, 'score' => 76])],
-      ['value' => json_encode(['text' => 'Your followers are your customers. We just made the bridge.', 'likes' => 178, 'retweets' => 52, 'score' => 74])],
-      ['value' => json_encode(['text' => 'Behind the scenes of our AI-powered store builder. Thread incoming.', 'likes' => 156, 'retweets' => 41, 'score' => 70])],
-      ['value' => json_encode(['text' => 'New partnership with @stripe for seamless creator payments', 'likes' => 134, 'retweets' => 38, 'score' => 65])],
-      ['value' => json_encode(['text' => 'Every pixel tells a story. What story does yours tell?', 'likes' => 112, 'retweets' => 29, 'score' => 58])],
-      ['value' => json_encode(['text' => 'Creator economy update: 47% of X creators want to sell directly to followers', 'likes' => 98, 'retweets' => 33, 'score' => 55])],
-    ],
-    'field_top_followers' => [
-      ['value' => json_encode(['username' => 'artcollector99', 'name' => 'Art Collector', 'avatar' => '', 'followers' => 15200])],
-      ['value' => json_encode(['username' => 'nft_whale', 'name' => 'NFT Whale', 'avatar' => '', 'followers' => 89000])],
-      ['value' => json_encode(['username' => 'creativestudio', 'name' => 'Creative Studio', 'avatar' => '', 'followers' => 34500])],
-      ['value' => json_encode(['username' => 'digitalartdaily', 'name' => 'Digital Art Daily', 'avatar' => '', 'followers' => 67800])],
-      ['value' => json_encode(['username' => 'pixelmaster', 'name' => 'Pixel Master', 'avatar' => '', 'followers' => 12400])],
-      ['value' => json_encode(['username' => 'web3creator', 'name' => 'Web3 Creator', 'avatar' => '', 'followers' => 28900])],
-      ['value' => json_encode(['username' => 'designinspo', 'name' => 'Design Inspiration', 'avatar' => '', 'followers' => 45600])],
-      ['value' => json_encode(['username' => 'techartist', 'name' => 'Tech Artist', 'avatar' => '', 'followers' => 19300])],
-    ],
+    'field_follower_count' => $mock['followers'],
+    'field_top_posts' => array_map(function($post) {
+      return ['value' => json_encode($post)];
+    }, $mock['top_posts']),
+    'field_top_followers' => array_map(function($f) {
+      return ['value' => json_encode($f)];
+    }, $mock['followers_sample']),
     'field_metrics' => [
-      'value' => json_encode([
-        'engagement_score' => 78,
-        'audience_quality' => 'high',
-        'content_themes' => ['digital art', 'creator economy', 'marketplace', 'AI tools', 'NFTs'],
-        'recommended_products' => ['digital prints', 'art commissions', 'premium wallpapers', 'exclusive drops', 'creator toolkits'],
-        'summary' => 'High-engagement digital art creator with a loyal collector audience. Strong potential for digital product sales and exclusive content offerings.',
-      ]),
+      'value' => json_encode($mock['metrics']),
     ],
   ]);
   $node->save();
 
-  echo "=== SAMPLE PROFILE CREATED ===\n";
-  echo "Node ID: " . $node->id() . "\n";
-  echo "View at: /node/" . $node->id() . "\n";
-  echo "\nTo test with live data, ensure your X API access tier supports user lookup.\n";
-  return;
+  echo "Created Node ID: " . $node->id() . " for @{$username}\n";
 }
+
+echo "\n=== 5 DEMO PROFILES CREATED ===\n";
+echo "View all at /admin/content or test frontend /stores/elonmusk etc.\n";
 
 // If we got a real profile, continue with live data
 echo "   Name: " . $profile['name'] . "\n";
