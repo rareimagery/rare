@@ -15,7 +15,8 @@ services:
       - marketplace-net
 
   drupal:
-    image: drupal:10.3-php8.3-apache
+    build: .
+    image: rareimagery-drupal:latest
     container_name: rare-drupal
     restart: unless-stopped
     depends_on:
@@ -31,9 +32,7 @@ services:
     ports:
       - "${DRUPAL_PORT:-8080}:80"
     command: >
-      bash -c "apt-get update && apt-get install -y git unzip &&
-               composer self-update &&
-               chown -R www-data:www-data /var/www/html &&
+      bash -c "chown -R www-data:www-data /var/www/html &&
                apache2-foreground"
     networks:
       - marketplace-net
