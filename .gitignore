@@ -1,0 +1,15 @@
+# Drupal
+web/sites/*/files/*
+!web/sites/*/files/.htaccess
+web/sites/development.services.yml
+web/sites/default/settings.local.php
+
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+
+# Docker
+*.log
+.DS_Store
