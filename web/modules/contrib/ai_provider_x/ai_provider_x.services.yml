@@ -1,0 +1,4 @@
+services:
+  ai_provider_x.api:
+    class: Drupal\ai_provider_x\XClient
+    arguments: ['@http_client']

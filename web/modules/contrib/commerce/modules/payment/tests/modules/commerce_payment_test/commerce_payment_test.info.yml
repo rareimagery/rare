@@ -1,0 +1,12 @@
+name: Commerce Payment Test
+description: Provides testing items for Payment
+type: module
+package: Testing
+dependencies:
+  - commerce:commerce_payment
+  - commerce:commerce_payment_example
+
+# Information added by Drupal.org packaging script on 2026-02-27
+version: '3.3.3'
+project: 'commerce'
+datestamp: 1772193544

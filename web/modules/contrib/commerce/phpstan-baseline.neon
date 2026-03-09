@@ -1,0 +1,16 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 1
+			path: modules/checkout/src/CheckoutPaneManager.php
+
+		-
+			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
+			count: 1
+			path: modules/order/src/Adjustment.php
+
+		-
+			message: "#^Class Drupal\\\\commerce_product\\\\Plugin\\\\Block\\\\VariationFieldBlock extends @internal class Drupal\\\\layout_builder\\\\Plugin\\\\Block\\\\FieldBlock\\.$#"
+			count: 1
+			path: modules/product/src/Plugin/Block/VariationFieldBlock.php

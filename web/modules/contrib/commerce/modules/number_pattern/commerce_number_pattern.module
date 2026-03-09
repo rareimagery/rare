@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Provides configurable patterns for generating sequential numbers.
+ */
+
+use Drupal\commerce_number_pattern\Hook\CommerceNumberPatternHooks;
+use Drupal\commerce_number_pattern\Hook\CommerceNumberPatternTokenHooks;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\Core\Render\BubbleableMetadata;
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+#[LegacyHook]
+function commerce_number_pattern_menu_links_discovered_alter(&$links): void {
+  \Drupal::service(CommerceNumberPatternHooks::class)->menuLinksDiscoveredAlter($links);
+}
+
+/**
+ * Implements hook_token_info().
+ */
+#[LegacyHook]
+function commerce_number_pattern_token_info(): array {
+  return \Drupal::service(CommerceNumberPatternTokenHooks::class)->tokenInfo();
+}
+
+/**
+ * Implements hook_tokens().
+ */
+#[LegacyHook]
+function commerce_number_pattern_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
+  return \Drupal::service(CommerceNumberPatternTokenHooks::class)->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}

@@ -1,0 +1,22 @@
+commerce_checkout.commerce_checkout_pane.coupon_redemption:
+  type: commerce_checkout_pane_configuration
+  mapping:
+    allow_multiple:
+      type: boolean
+      label: 'Allow multiple coupons'
+
+views.area.commerce_coupon_redemption:
+  type: views_area
+  label: 'Coupon redemption'
+  mapping:
+    allow_multiple:
+      type: boolean
+      label: 'Allow multiple coupons to be redeemed'
+
+commerce_promotion.settings:
+  type: config_object
+  label: 'Promotion settings'
+  mapping:
+    enforce_weight_ordering:
+      type: boolean
+      label: 'Apply all promotions by sort order to enforce compatibility, including those with coupons'

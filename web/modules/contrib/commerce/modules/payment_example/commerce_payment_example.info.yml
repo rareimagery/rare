@@ -1,0 +1,13 @@
+name: Commerce Payment Example
+type: module
+description: 'Provides payment gateway examples.'
+package: Commerce
+core_version_requirement: ^10.3 || ^11
+dependencies:
+  - commerce:commerce
+  - commerce:commerce_payment
+
+# Information added by Drupal.org packaging script on 2026-02-27
+version: '3.3.3'
+project: 'commerce'
+datestamp: 1772193544

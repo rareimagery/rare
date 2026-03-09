@@ -1,0 +1,199 @@
+<?php
+
+/**
+ * @file
+ * Defines common functionality for all Commerce modules.
+ */
+
+use Drupal\commerce\Hook\CommerceHooks;
+use Drupal\commerce\Hook\CommerceThemeHooks;
+use Drupal\commerce\Hook\CommerceToolbarHooks;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+
+/**
+ * Implements hook_theme().
+ */
+#[LegacyHook]
+function commerce_theme(): array {
+  return \Drupal::service(CommerceThemeHooks::class)->theme();
+}
+
+/**
+ * Implements hook_mail().
+ *
+ * Prepares emails sent by the MailHandler service.
+ */
+#[LegacyHook]
+function commerce_mail($key, &$message, $params) {
+  Drupal::service(CommerceHooks::class)->mail($key, $message, $params);
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+#[LegacyHook]
+function commerce_toolbar() {
+  return Drupal::service(CommerceToolbarHooks::class)->toolbar();
+}
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+#[LegacyHook]
+function commerce_toolbar_alter(&$items) {
+  Drupal::service(CommerceToolbarHooks::class)->toolbarAlter($items);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+#[LegacyHook]
+function commerce_preprocess_menu_local_action(array &$variables) {
+  \Drupal::service(CommerceThemeHooks::class)->preprocessMenuLocalAction($variables);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+#[LegacyHook]
+function commerce_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::service(CommerceHooks::class)->formAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Invokes inline form alter hooks for the given element's inline forms.
+ *
+ * @param array $element
+ *   The form element.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param array $complete_form
+ *   The complete form structure.
+ */
+function commerce_alter_inline_forms(array &$element, FormStateInterface $form_state, array &$complete_form) {
+  \Drupal::service(CommerceHooks::class)->alterInlineForms($element, $form_state, $complete_form);
+}
+
+/**
+ * Implements hook_field_widget_info_alter().
+ *
+ * Exposes the commerce_plugin_item widgets for each of the field type's
+ * derivatives, since core does not do it automatically.
+ */
+#[LegacyHook]
+function commerce_field_widget_info_alter(array &$info) {
+  \Drupal::service(CommerceHooks::class)->fieldWidgetInfoAlter($info);
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ *
+ * Exposes the commerce_plugin_item_default formatter for each of the field
+ * type's derivatives, since core does not do it automatically.
+ */
+#[LegacyHook]
+function commerce_field_formatter_info_alter(array &$info) {
+  \Drupal::service(CommerceHooks::class)->fieldFormatterInfoAlter($info);
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ *
+ * Base fields have a description that's used for two very different purposes:
+ * - To describe the field in the Views UI and other parts of the system.
+ * - As user-facing help text shown on field widgets.
+ * The text is rarely suitable for both, and in most cases feels redundant
+ * as user-facing help text. Hence we remove it from that context, but only if
+ * the definition didn't specify otherwise via our display_description setting.
+ */
+#[LegacyHook]
+function commerce_field_widget_single_element_form_alter(array &$element, FormStateInterface $form_state, array $context) {
+  \Drupal::service(CommerceHooks::class)->fieldWidgetSingleElementFormAlter($element, $form_state, $context);
+}
+
+/**
+ * Gets the entity display for the given entity type and bundle.
+ *
+ * The entity display will be created if missing.
+ *
+ * @param string $entity_type
+ *   The entity type.
+ * @param string $bundle
+ *   The bundle.
+ * @param string $display_context
+ *   The display context ('view' or 'form').
+ *
+ * @throws \InvalidArgumentException
+ *   Thrown when an invalid display context is provided.
+ *
+ * @return \Drupal\Core\Entity\Display\EntityDisplayInterface
+ *   The entity display.
+ */
+function commerce_get_entity_display($entity_type, $bundle, $display_context) {
+  if (!in_array($display_context, ['view', 'form'])) {
+    throw new \InvalidArgumentException(sprintf('Invalid display_context %s passed to _commerce_product_get_display().', $display_context));
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_' . $display_context . '_display');
+  $display = $storage->load($entity_type . '.' . $bundle . '.default');
+  if (!$display) {
+    $display = $storage->create([
+      'targetEntityType' => $entity_type,
+      'bundle' => $bundle,
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+  }
+
+  return $display;
+}
+
+/**
+ * Helper for providing entity theme suggestions.
+ *
+ * @param string $entity_type_id
+ *   The entity type ID.
+ * @param array $variables
+ *   An array of variables passed to the theme hook.
+ *
+ * @return array
+ *   An array of theme suggestions.
+ */
+function _commerce_entity_theme_suggestions($entity_type_id, array $variables) {
+  $original = $variables['theme_hook_original'];
+  $entity = $variables['elements']['#' . $entity_type_id];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions = [];
+  $suggestions[] = $original . '__' . $sanitized_view_mode;
+  $suggestions[] = $original . '__' . $entity->bundle();
+  $suggestions[] = $original . '__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = $original . '__' . $entity->id();
+  $suggestions[] = $original . '__' . $entity->id() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+#[LegacyHook]
+function commerce_page_attachments_alter(array &$attachments) {
+  \Drupal::service(CommerceHooks::class)->pageAttachmentsAlter($attachments);
+}
+
+/**
+ * Implements hook_cron().
+ */
+#[LegacyHook]
+function commerce_cron() {
+  \Drupal::service(CommerceHooks::class)->cron();
+}
+
+/**
+ * Prepares variables for the dashboard inbox.
+ */
+function template_preprocess_commerce_dashboard_inbox(&$variables) {
+  \Drupal::service(CommerceThemeHooks::class)->preprocessCommerceDashboardInbox($variables);
+}

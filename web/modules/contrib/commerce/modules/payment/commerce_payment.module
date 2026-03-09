@@ -1,0 +1,154 @@
+<?php
+
+/**
+ * @file
+ * Provides payment functionality.
+ */
+
+use Drupal\commerce_payment\Hook\CommercePaymentHooks;
+use Drupal\commerce_payment\Hook\CommercePaymentThemeHooks;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+
+/**
+ * Implements hook_commerce_checkout_pane_info_alter().
+ */
+#[LegacyHook]
+function commerce_payment_commerce_checkout_pane_info_alter(&$definitions): void {
+  \Drupal::service(CommercePaymentHooks::class)->commerceCheckoutPaneInfoAlter($definitions);
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+#[LegacyHook]
+function commerce_payment_entity_base_field_info(EntityTypeInterface $entity_type): array {
+  return \Drupal::service(CommercePaymentHooks::class)->entityBaseFieldInfo($entity_type);
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+#[LegacyHook]
+function commerce_payment_entity_operation(EntityInterface $entity): array {
+  return \Drupal::service(CommercePaymentHooks::class)->entityOperation($entity);
+}
+
+/**
+ * Implements hook_theme().
+ */
+#[LegacyHook]
+function commerce_payment_theme(): array {
+  return \Drupal::service(CommercePaymentThemeHooks::class)->theme();
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_payment_method().
+ */
+#[LegacyHook]
+function commerce_payment_theme_suggestions_commerce_payment_method(array $variables): array {
+  return \Drupal::service(CommercePaymentThemeHooks::class)->themeSuggestionsCommercePaymentMethod($variables);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+#[LegacyHook]
+function commerce_payment_commerce_payment_method_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
+  \Drupal::service(CommercePaymentHooks::class)->commercePaymentMethodView($build, $entity, $display, $view_mode);
+}
+
+/**
+ * Prepares variables for payment method templates.
+ *
+ * Default template: commerce-payment-method.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_payment_method(array &$variables): void {
+  \Drupal::service(CommercePaymentThemeHooks::class)->preprocessCommercePaymentMethod($variables);
+}
+
+/**
+ * Implements hook_preprocess_commerce_checkout_completion_message().
+ */
+#[LegacyHook]
+function commerce_payment_preprocess_commerce_checkout_completion_message(&$variables): void {
+  \Drupal::service(CommercePaymentThemeHooks::class)->preprocessCommerceCheckoutCompletionMessage($variables);
+}
+
+/**
+ * Implements hook_preprocess_commerce_order().
+ */
+#[LegacyHook]
+function commerce_payment_preprocess_commerce_order(&$variables): void {
+  \Drupal::service(CommercePaymentThemeHooks::class)->preprocessCommerceOrder($variables);
+}
+
+/**
+ * Implements hook_preprocess_commerce_order_receipt().
+ */
+#[LegacyHook]
+function commerce_payment_preprocess_commerce_order_receipt(&$variables): void {
+  \Drupal::service(CommercePaymentThemeHooks::class)->preprocessCommerceOrderReceipt($variables);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+#[LegacyHook]
+function commerce_payment_form_commerce_checkout_flow_edit_form_alter(array &$form, FormStateInterface $form_state): void {
+  \Drupal::service(CommercePaymentHooks::class)->formCommerceCheckoutFlowEditFormAlter($form, $form_state);
+}
+
+/**
+ * Implements hook_views_data().
+ */
+#[LegacyHook]
+function commerce_payment_views_data(): array {
+  return \Drupal::service(CommercePaymentHooks::class)->viewsData();
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+#[LegacyHook]
+function commerce_payment_field_formatter_info_alter(array &$info): void {
+  \Drupal::service(CommercePaymentHooks::class)->fieldFormatterInfoAlter($info);
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+#[LegacyHook]
+function commerce_payment_config_schema_info_alter(&$definitions): void {
+  \Drupal::service(CommercePaymentHooks::class)->configSchemaInfoAlter($definitions);
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_payment_method().
+ */
+#[LegacyHook]
+function commerce_payment_theme_suggestions_commerce_payment(array $variables): array {
+  return \Drupal::service(CommercePaymentThemeHooks::class)->themeSuggestionsCommercePayment($variables);
+}
+
+/**
+ * Prepares variables for payment templates.
+ *
+ * Default template: commerce-payment.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_payment(array &$variables): void {
+  \Drupal::service(CommercePaymentThemeHooks::class)->preprocessCommercePayment($variables);
+}

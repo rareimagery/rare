@@ -1,0 +1,363 @@
+<?php
+
+/**
+ * @file
+ * Defines the Order entity and associated features.
+ */
+
+use Drupal\commerce_order\Hook\CommerceOrderHooks;
+use Drupal\commerce_order\Hook\CommerceOrderThemeHooks;
+use Drupal\commerce_order\Hook\CommerceOrderTokensHooks;
+use Drupal\commerce_order\Hook\CommerceOrderViewsHooks;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\entity\BundleFieldDefinition;
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\profile\Entity\ProfileTypeInterface;
+
+/**
+ * Implements hook_entity_extra_field_info_alter().
+ */
+#[LegacyHook]
+function commerce_order_entity_extra_field_info_alter(array &$info): void {
+  \Drupal::service(CommerceOrderHooks::class)
+    ->entityExtraFieldInfoAlter($info);
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+#[LegacyHook]
+function commerce_order_entity_type_alter(array &$entity_types): void {
+  \Drupal::service(CommerceOrderHooks::class)->entityTypeAlter($entity_types);
+}
+
+/**
+ * Implements hook_entity_type_build().
+ *
+ * Adds the address book form classes to profile entities.
+ * Referenced in commerce_order.routing.yml.
+ */
+#[LegacyHook]
+function commerce_order_entity_type_build(array &$entity_types): void {
+  \Drupal::service(CommerceOrderHooks::class)->entityTypeBuild($entity_types);
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+#[LegacyHook]
+function commerce_order_field_formatter_info_alter(array &$info): void {
+  \Drupal::service(CommerceOrderHooks::class)->fieldFormatterInfoAlter($info);
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ *
+ * - Changes the label of the purchased_entity field to the label of the
+ *   target type (e.g. 'Product variation').
+ * - Forbids editing the purchased_entity once the order item is no longer new.
+ */
+#[LegacyHook]
+function commerce_order_field_widget_single_element_form_alter(array &$element, FormStateInterface $form_state, array $context): void {
+  \Drupal::service(CommerceOrderHooks::class)
+    ->fieldWidgetSingleElementFormAlter($element, $form_state, $context);
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ *
+ * Removes profile tabs for profile types managed through the address book tab.
+ */
+#[LegacyHook]
+function commerce_order_local_tasks_alter(array &$definitions): void {
+  \Drupal::service(CommerceOrderHooks::class)->localTasksAlter($definitions);
+}
+
+/**
+ * Implements hook_theme().
+ */
+#[LegacyHook]
+function commerce_order_theme(): array {
+  return \Drupal::service(CommerceOrderThemeHooks::class)->theme();
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_order().
+ */
+#[LegacyHook]
+function commerce_order_theme_suggestions_commerce_order(array $variables): array {
+  return \Drupal::service(CommerceOrderThemeHooks::class)
+    ->themeSuggestionsCommerceOrder($variables);
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_order_item().
+ */
+#[LegacyHook]
+function commerce_order_theme_suggestions_commerce_order_item(array $variables): array {
+  return \Drupal::service(CommerceOrderThemeHooks::class)
+    ->themeSuggestionsCommerceOrderItem($variables);
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_order_receipt().
+ */
+#[LegacyHook]
+function commerce_order_theme_suggestions_commerce_order_receipt(array $variables): array {
+  return \Drupal::service(CommerceOrderThemeHooks::class)
+    ->themeSuggestionsCommerceOrderReceipt($variables);
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+#[LegacyHook]
+function commerce_order_views_data_alter(array &$data): void {
+  \Drupal::service(CommerceOrderViewsHooks::class)->viewsDataAlter($data);
+}
+
+/**
+ * Prepares variables for commerce order item templates.
+ *
+ * Default template: commerce-order-item.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_order_item(array &$variables): void {
+  \Drupal::service(CommerceOrderThemeHooks::class)->preprocessCommerceOrderItem($variables);
+}
+
+/**
+ * Prepares variables for order templates.
+ *
+ * Default template: commerce-order.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_order(array &$variables): void {
+  \Drupal::service(CommerceOrderThemeHooks::class)->preprocessCommerceOrder($variables);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for 'profile_type_form'.
+ */
+#[LegacyHook]
+function commerce_order_form_profile_type_form_alter(array &$form, FormStateInterface $form_state): void {
+  \Drupal::service(CommerceOrderHooks::class)->formProfileTypeFormAlter($form, $form_state);
+}
+
+/**
+ * Builds the $profile->address field definition.
+ *
+ * @param string $profile_type_id
+ *   The profile type ID.
+ *
+ * @return \Drupal\entity\BundleFieldDefinition
+ *   The field definition.
+ */
+function commerce_order_build_address_field_definition($profile_type_id) {
+  $address_field_definition = BundleFieldDefinition::create('address')
+    ->setTargetEntityTypeId('profile')
+    ->setTargetBundle($profile_type_id)
+    ->setName('address')
+    ->setLabel('Address')
+    ->setRequired(TRUE)
+    ->setDisplayOptions('view', [
+      'label' => 'hidden',
+      'type' => 'address_default',
+    ])
+    ->setDisplayOptions('form', [
+      'type' => 'address_default',
+    ]);
+
+  return $address_field_definition;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ *
+ * Forbids the "customer" profile type from being deletable.
+ */
+#[LegacyHook]
+function commerce_order_profile_type_access(ProfileTypeInterface $profile_type, $operation) {
+  return \Drupal::service(CommerceOrderHooks::class)->profileTypeAccess($profile_type, $operation);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ *
+ * Forbids the profile "address" field from being deletable.
+ * This is an alternative to locking the field which still leaves
+ * the field editable.
+ */
+#[LegacyHook]
+function commerce_order_field_storage_config_access(FieldStorageConfigInterface $field_storage, $operation) {
+  return \Drupal::service(CommerceOrderHooks::class)->fieldStorageConfigAccess($field_storage, $operation);
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ *
+ * Hides the "Storage settings" operation for the profile "address" field.
+ */
+#[LegacyHook]
+function commerce_order_entity_operation_alter(array &$operations, EntityInterface $entity): void {
+  \Drupal::service(CommerceOrderHooks::class)->entityOperationAlter($operations, $entity);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for 'field_config_edit_form'.
+ *
+ * Hides the "Required" and "Available countries" settings for the customer
+ * profile "address" field.
+ */
+#[LegacyHook]
+function commerce_order_form_field_config_edit_form_alter(array &$form, FormStateInterface $form_state): void {
+  \Drupal::service(CommerceOrderHooks::class)->fieldConfigEditFormAlter($form, $form_state);
+}
+
+/**
+ * Implements hook_jsonapi_ENTITY_TYPE_filter_access().
+ */
+#[LegacyHook]
+function commerce_order_jsonapi_commerce_order_filter_access(EntityTypeInterface $entity_type, AccountInterface $account) {
+  return \Drupal::service(CommerceOrderHooks::class)->jsonapiCommerceOrderFilterAccess($entity_type, $account);
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+#[LegacyHook]
+function commerce_order_theme_registry_alter(&$theme_registry) {
+  \Drupal::service(CommerceOrderThemeHooks::class)->themeRegistryAlter($theme_registry);
+}
+
+/**
+ * Implements hook_field_group_content_element_keys_alter().
+ *
+ * Allow orders to render fields groups defined from Fields UI.
+ */
+#[LegacyHook]
+function commerce_order_field_group_content_element_keys_alter(&$keys): void {
+  \Drupal::service(CommerceOrderHooks::class)->fieldGroupContentElementKeysAlter($keys);
+}
+
+/**
+ * #after_build callback: Rename the profile address organization field label.
+ */
+function commerce_order_address_field_after_build(array $element, FormStateInterface $form_state): array {
+  if (isset($element['address']['organization'])) {
+    $element['address']['organization']['#title'] = t('Company');
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_commerce_dashboard_page_build_alter().
+ */
+#[LegacyHook]
+function commerce_order_commerce_dashboard_page_build_alter(&$build): void {
+  \Drupal::service(CommerceOrderHooks::class)->commerceDashboardPageBuildAlter($build);
+}
+
+/**
+ * Implements hook_entity_reference_selection_alter().
+ */
+#[LegacyHook]
+function commerce_order_entity_reference_selection_alter(&$definitions): void {
+  \Drupal::service(CommerceOrderHooks::class)->entityReferenceSelectionAlter($definitions);
+}
+
+/**
+ * Implements hook_gin_content_form_routes().
+ */
+#[LegacyHook]
+function commerce_order_gin_content_form_routes(): array {
+  return \Drupal::service(CommerceOrderHooks::class)->ginContentFormRoutes();
+}
+
+/**
+ * Implements hook_entity_bundle_info_alter().
+ */
+#[LegacyHook]
+function commerce_order_entity_bundle_info_alter(array &$bundles): void {
+  \Drupal::service(CommerceOrderHooks::class)->entityBundleInfoAlter($bundles);
+}
+
+/**
+ * Implements hook_views_data().
+ */
+#[LegacyHook]
+function commerce_order_views_data(): array {
+  return \Drupal::service(CommerceOrderViewsHooks::class)->viewsData();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_build_defaults_alter().
+ */
+#[LegacyHook]
+function commerce_order_profile_build_defaults_alter(array &$build, EntityInterface $entity, $view_mode): void {
+  \Drupal::service(CommerceOrderHooks::class)->profileBuildDefaultsAlter($build, $entity, $view_mode);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+#[LegacyHook]
+function commerce_order_profile_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
+  \Drupal::service(CommerceOrderHooks::class)->profileViewAlter($build, $entity, $display);
+}
+
+/**
+ * Implements hook_token_info().
+ */
+#[LegacyHook]
+function commerce_order_token_info(): array {
+  return \Drupal::service(CommerceOrderTokensHooks::class)->tokenInfo();
+}
+
+/**
+ * Implements hook_tokens().
+ */
+#[LegacyHook]
+function commerce_order_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
+  return \Drupal::service(CommerceOrderTokensHooks::class)->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+#[LegacyHook]
+function commerce_order_preprocess_menu_local_action(array &$variables): void {
+  \Drupal::service(CommerceOrderThemeHooks::class)->preprocessMenuLocalAction($variables);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+#[LegacyHook]
+function commerce_order_preprocess_username(array &$variables): void {
+  \Drupal::service(CommerceOrderThemeHooks::class)->preprocessUsername($variables);
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+#[LegacyHook]
+function commerce_order_menu_local_tasks_alter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
+  \Drupal::service(CommerceOrderHooks::class)->menuLocalTasksAlter($data, $route_name, $cacheability);
+}

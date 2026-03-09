@@ -1,0 +1,11 @@
+name: 'Commerce update test'
+type: module
+description: 'Module for testing extension updates to configuration.'
+package: Testing
+dependencies:
+  - commerce:commerce_store
+
+# Information added by Drupal.org packaging script on 2026-02-27
+version: '3.3.3'
+project: 'commerce'
+datestamp: 1772193544

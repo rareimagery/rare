@@ -1,0 +1,322 @@
+<?php
+
+/**
+ * @file
+ * Defines the Product entity and associated features.
+ */
+
+use Drupal\commerce_product\Hook\CommerceProductHooks;
+use Drupal\commerce_product\Hook\CommerceProductThemeHooks;
+use Drupal\commerce_product\Hook\CommerceProductTokensHooks;
+use Drupal\commerce_product\Hook\CommerceProductViewsHooks;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\commerce\EntityHelper;
+use Drupal\commerce_product\Entity\ProductTypeInterface;
+use Drupal\entity\BundleFieldDefinition;
+use Drupal\field\FieldStorageConfigInterface;
+
+/**
+ * Implements hook_config_translation_info_alter().
+ */
+#[LegacyHook]
+function commerce_product_config_translation_info_alter(&$info) {
+  \Drupal::service(CommerceProductHooks::class)->configTranslationInfoAlter($info);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+#[LegacyHook]
+function commerce_product_entity_form_display_update(EntityFormDisplayInterface $form_display) {
+  \Drupal::service(CommerceProductHooks::class)->entityFormDisplayUpdate($form_display);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+#[LegacyHook]
+function commerce_product_entity_view_display_update(EntityViewDisplayInterface $entity) {
+  \Drupal::service(CommerceProductHooks::class)->entityViewDisplayUpdate($entity);
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+#[LegacyHook]
+function commerce_product_theme_registry_alter(&$theme_registry) {
+  \Drupal::service(CommerceProductThemeHooks::class)->themeRegistryAlter($theme_registry);
+}
+
+/**
+ * Turn off Quick Edit for injected variation fields, to avoid warnings.
+ */
+function commerce_product_remove_quickedit(&$variables) {
+  $entity_type_id = $variables['element']['#entity_type'];
+  if ($entity_type_id != 'commerce_product_variation' || empty($variables['element']['#ajax_replace_class'])) {
+    return;
+  }
+
+  if (isset($variables['attributes']['data-quickedit-field-id'])) {
+    unset($variables['attributes']['data-quickedit-field-id']);
+    $context_key = array_search('user.permissions', $variables['#cache']['contexts']);
+    unset($variables['#cache']['contexts'][$context_key]);
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+#[LegacyHook]
+function commerce_product_theme(): array {
+  return \Drupal::service(CommerceProductThemeHooks::class)->theme();
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_product().
+ */
+#[LegacyHook]
+function commerce_product_theme_suggestions_commerce_product(array $variables): array {
+  return \Drupal::service(CommerceProductThemeHooks::class)->themeSuggestionsCommerceProduct($variables);
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_product_variation().
+ */
+#[LegacyHook]
+function commerce_product_theme_suggestions_commerce_product_variation(array $variables): array {
+  return \Drupal::service(CommerceProductThemeHooks::class)->themeSuggestionsCommerceProductVariation($variables);
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_product_commerce_product_attribute_value().
+ */
+#[LegacyHook]
+function commerce_product_theme_suggestions_commerce_product_attribute_value(array $variables): array {
+  return \Drupal::service(CommerceProductThemeHooks::class)->themeSuggestionsCommerceProductAttributeValue($variables);
+}
+
+/**
+ * Prepares variables for product templates.
+ *
+ * Default template: commerce-product.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_product(array &$variables): void {
+  \Drupal::service(CommerceProductThemeHooks::class)->preprocessCommerceProduct($variables);
+}
+
+/**
+ * Prepares variables for product variation templates.
+ *
+ * Default template: commerce-product-variation.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_product_variation(array &$variables): void {
+  \Drupal::service(CommerceProductThemeHooks::class)->preprocessCommerceProductVariation($variables);
+}
+
+/**
+ * Prepares variables for product attribute value templates.
+ *
+ * Default template: commerce-product-attribute-value.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_product_attribute_value(array &$variables): void {
+  \Drupal::service(CommerceProductThemeHooks::class)->preprocessCommerceProductAttributeValue($variables);
+}
+
+/**
+ * Adds the default body field to a product type.
+ *
+ * @param \Drupal\commerce_product\Entity\ProductTypeInterface $product_type
+ *   The product type.
+ * @param string $label
+ *   (optional) The label for the body instance. Defaults to 'Body'.
+ */
+function commerce_product_add_body_field(ProductTypeInterface $product_type, $label = 'Body') {
+  $field_definition = BundleFieldDefinition::create('text_with_summary')
+    ->setTargetEntityTypeId('commerce_product')
+    ->setTargetBundle($product_type->id())
+    ->setName('body')
+    ->setLabel($label)
+    ->setTranslatable(TRUE)
+    ->setSetting('display_summary', FALSE)
+    ->setDisplayOptions('form', [
+      'type' => 'text_textarea_with_summary',
+      'weight' => 1,
+    ])
+    ->setDisplayOptions('view', [
+      'label' => 'hidden',
+      'type' => 'text_default',
+    ]);
+
+  $configurable_field_manager = \Drupal::service('commerce.configurable_field_manager');
+  $configurable_field_manager->createField($field_definition, FALSE);
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+#[LegacyHook]
+function commerce_product_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context): void {
+  \Drupal::service(CommerceProductHooks::class)->fieldWidgetSingleElementFormAlter($element, $form_state, $context);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for 'entity_form_display_edit_form'.
+ *
+ * Don't allow referencing existing variations, since a variation must
+ * always belong to a single product only.
+ */
+#[LegacyHook]
+function commerce_product_form_entity_form_display_edit_form_alter(array &$form, FormStateInterface $form_state): void {
+  \Drupal::service(CommerceProductHooks::class)->formEntityFormDisplayEditFormAlter($form, $form_state);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for 'field_storage_config_edit_form'.
+ *
+ * Hide the cardinality setting for attribute fields.
+ */
+#[LegacyHook]
+function commerce_product_form_field_storage_config_edit_form_alter(array &$form, FormStateInterface $form_state): void {
+  \Drupal::service(CommerceProductHooks::class)->formFieldStorageConfigEditFormAlter($form, $form_state);
+}
+
+/**
+ * Implements hook_search_api_views_handler_mapping_alter().
+ *
+ * Search API views filters do not use the options filter by default
+ * for all entity bundle fields.
+ *
+ * @see https://www.drupal.org/project/search_api/issues/2847994
+ */
+#[LegacyHook]
+function commerce_product_search_api_views_handler_mapping_alter(array &$mapping): void {
+  \Drupal::service(CommerceProductHooks::class)->searchApiViewsHandlerMappingAlter($mapping);
+}
+
+/**
+ * Gets the list of available product type labels.
+ *
+ * @return string[]
+ *   The product type labels, keyed by product type ID.
+ */
+function commerce_product_type_labels(): array {
+  $product_type_storage = \Drupal::entityTypeManager()->getStorage('commerce_product_type');
+  $product_types = $product_type_storage->loadMultiple();
+
+  return EntityHelper::extractLabels($product_types);
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ *
+ * This method provides a compatibility layer to allow new config schemas to be
+ * used with older versions of Drupal.
+ */
+#[LegacyHook]
+function commerce_product_config_schema_info_alter(&$definitions): void {
+  \Drupal::service(CommerceProductHooks::class)->configSchemaInfoAlter($definitions);
+}
+
+/**
+ * Implements hook_commerce_condition_info_alter().
+ */
+#[LegacyHook]
+function commerce_product_commerce_condition_info_alter(array &$definitions): void {
+  \Drupal::service(CommerceProductHooks::class)->commerceConditionInfoAlter($definitions);
+}
+
+/**
+ * Implements hook_jsonapi_ENTITY_TYPE_filter_access().
+ *
+ * Product variations do not have a query access handler, so we must define
+ * the access for JSON:API filter access here.
+ */
+#[LegacyHook]
+function commerce_product_jsonapi_commerce_product_variation_filter_access(EntityTypeInterface $entity_type, AccountInterface $account): array {
+  return \Drupal::service(CommerceProductHooks::class)->jsonApiCommerceProductVariationFilterAccess($entity_type, $account);
+}
+
+/**
+ * Implements hook_block_alter().
+ */
+#[LegacyHook]
+function commerce_product_block_alter(array &$info): void {
+  \Drupal::service(CommerceProductHooks::class)->blockAlter($info);
+}
+
+/**
+ * Implements hook_field_group_content_element_keys_alter().
+ *
+ * Allow products to render fields groups defined from Fields UI.
+ */
+#[LegacyHook]
+function commerce_product_field_group_content_element_keys_alter(&$keys): void {
+  \Drupal::service(CommerceProductHooks::class)->fieldGroupContentElementKeysAlter($keys);
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+#[LegacyHook]
+function commerce_product_entity_operation_alter(array &$operations, EntityInterface $entity): void {
+  \Drupal::service(CommerceProductHooks::class)->entityOperationAlter($operations, $entity);
+}
+
+/**
+ * Implements hook_gin_content_form_routes().
+ */
+#[LegacyHook]
+function commerce_product_gin_content_form_routes(): array {
+  return \Drupal::service(CommerceProductHooks::class)->ginContentFormRoutes();
+}
+
+/**
+ * Implements hook_field_views_data_alter().
+ *
+ * Adds a custom filter to entity reference fields which reference
+ * product attribute values. Same approach as taxonomy_field_views_data_alter().
+ *
+ * @see views_field_default_views_data()
+ */
+#[LegacyHook]
+function commerce_product_field_views_data_alter(array &$data, FieldStorageConfigInterface $field_storage): void {
+  \Drupal::service(CommerceProductViewsHooks::class)->fieldViewsDataAlter($data, $field_storage);
+}
+
+/**
+ * Implements hook_token_info().
+ */
+#[LegacyHook]
+function commerce_product_token_info(): array {
+  return \Drupal::service(CommerceProductTokensHooks::class)->tokenInfo();
+}
+
+/**
+ * Implements hook_tokens().
+ */
+#[LegacyHook]
+function commerce_product_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
+  return \Drupal::service(CommerceProductTokensHooks::class)->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}

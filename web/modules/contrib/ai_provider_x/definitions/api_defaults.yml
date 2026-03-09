@@ -1,0 +1,63 @@
+chat:
+  input:
+    description: 'Input provided to the model.'
+    type: 'array'
+    default:
+      - { role: "system", content: "You are a test assistant." }
+      - { role: "user", content: "Testing. Just say hi and nothing else." }
+    required: true
+  authentication:
+    description: 'X Ai API Key.'
+    type: 'string'
+    default: ''
+    required: true
+  configuration:
+    max_tokens:
+      label: 'Max Tokens'
+      description: 'The maximum number of tokens to generate in the response.'
+      type: 'integer'
+      default: 4096
+      required: false
+      constraints:
+        min: 1
+        max: 128000
+    temperature:
+      label: 'Temperature'
+      description: 'Controls randomness in the output. Lower values (0.2-0.4) for factual responses, higher values for more creative responses. Range: (0.0-2.0).'
+      type: 'float'
+      default: 1
+      required: false
+      constraints:
+        min: 0
+        max: 2
+        step: 0.1
+    frequency_penalty:
+      label: 'Frequency Penalty'
+      description: 'Reduces repetitive words. Range: -2.0 to 2.0 for varied vocabulary.'
+      type: 'float'
+      default: 0
+      required: false
+      constraints:
+        min: -2
+        max: 2
+        step: 0.1
+    presence_penalty:
+      label: 'Presence Penalty'
+      description: 'Avoids repeating topics. Range: -2.0 to 2.0 for topic diversity.'
+      type: 'float'
+      default: 0
+      required: false
+      constraints:
+        min: -2
+        max: 2
+        step: 0.1
+    top_p:
+      label: 'Top P'
+      description: 'Controls diversity via nucleus sampling.'
+      type: 'float'
+      default: 1
+      required: false
+      constraints:
+        min: 0
+        max: 1
+        step: 0.1

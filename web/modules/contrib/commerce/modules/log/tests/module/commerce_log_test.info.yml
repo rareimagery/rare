@@ -1,0 +1,12 @@
+name: Commerce Log Test
+type: module
+description: 'Test module for Commerce Log.'
+package: Testing
+dependencies:
+  - commerce:commerce_log
+  - drupal:entity_test
+
+# Information added by Drupal.org packaging script on 2026-02-27
+version: '3.3.3'
+project: 'commerce'
+datestamp: 1772193544

@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @file
+ * Defines the Store entity and associated features.
+ */
+
+use Drupal\commerce_store\Hook\CommerceStoreHooks;
+use Drupal\commerce_store\Hook\CommerceStoreThemeHooks;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Sets the default "from" address to the current store email.
+ */
+#[LegacyHook]
+function commerce_store_mail_alter(&$message): void {
+  \Drupal::service(CommerceStoreHooks::class)->mailAlter($message);
+}
+
+/**
+ * Implements hook_theme().
+ */
+#[LegacyHook]
+function commerce_store_theme(): array {
+  return \Drupal::service(CommerceStoreThemeHooks::class)->theme();
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+#[LegacyHook]
+function commerce_store_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context): void {
+  \Drupal::service(CommerceStoreHooks::class)->fieldWidgetSingleElementFormAlter($element, $form_state, $context);
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_store().
+ */
+#[LegacyHook]
+function commerce_store_theme_suggestions_commerce_store(array $variables): array {
+  return \Drupal::service(CommerceStoreThemeHooks::class)->themeSuggestionsCommerceStore($variables);
+}
+
+/**
+ * Prepares variables for store templates.
+ *
+ * Default template: commerce-store.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_store(array &$variables): void {
+  \Drupal::service(CommerceStoreThemeHooks::class)->preprocessCommerceStore($variables);
+}
+
+/**
+ * Implements hook_field_group_content_element_keys_alter().
+ *
+ * Allow stores to render fields groups defined from Fields UI.
+ */
+#[LegacyHook]
+function commerce_store_field_group_content_element_keys_alter(&$keys): void {
+  \Drupal::service(CommerceStoreHooks::class)->fieldGroupContentElementKeysAlter($keys);
+}
+
+/**
+ * Implements hook_gin_content_form_routes().
+ */
+#[LegacyHook]
+function commerce_store_gin_content_form_routes(): array {
+  return \Drupal::service(CommerceStoreHooks::class)->ginContentFormRoutes();
+}

@@ -1,0 +1,112 @@
+<?php
+
+/**
+ * @file
+ * Provides a UI for managing promotions.
+ */
+
+use Drupal\commerce_promotion\Hook\CommercePromotionHooks;
+use Drupal\commerce_promotion\Hook\CommercePromotionThemeHooks;
+use Drupal\commerce_promotion\Hook\CommercePromotionViewsHooks;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_commerce_condition_info_alter().
+ */
+#[LegacyHook]
+function commerce_promotion_commerce_condition_info_alter(&$definitions): void {
+  \Drupal::service(CommercePromotionHooks::class)->commerceConditionInfoAlter($definitions);
+}
+
+/**
+ * Implements hook_user_presave().
+ */
+#[LegacyHook]
+function commerce_promotion_user_presave(UserInterface $account): void {
+  \Drupal::service(CommercePromotionHooks::class)->userPresave($account);
+}
+
+/**
+ * Implements hook_theme().
+ */
+#[LegacyHook]
+function commerce_promotion_theme() {
+  return \Drupal::service(CommercePromotionThemeHooks::class)->theme();
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_promotion().
+ */
+#[LegacyHook]
+function commerce_promotion_theme_suggestions_commerce_promotion(array $variables): array {
+  return \Drupal::service(CommercePromotionThemeHooks::class)->themeSuggestionsCommercePromotion($variables);
+}
+
+/**
+ * Prepares variables for promotion templates.
+ *
+ * Default template: commerce-promotion.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_promotion(array &$variables) {
+  \Drupal::service(CommercePromotionThemeHooks::class)->preprocessCommercePromotion($variables);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Removes core's built-in formatters from views field options for
+ * promotion start_date and end_date fields, since they perform timezone
+ * conversion. The "Default (Store timezone)" formatter should be used instead.
+ */
+#[LegacyHook]
+function commerce_promotion_form_views_ui_config_item_form_alter(&$form, FormStateInterface $form_state): void {
+  \Drupal::service(CommercePromotionHooks::class)->formViewsUiConfigItemFormAlter($form, $form_state);
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+#[LegacyHook]
+function commerce_promotion_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context): void {
+  \Drupal::service(CommercePromotionHooks::class)->fieldWidgetSingleElementFormAlter($element, $form_state, $context);
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+#[LegacyHook]
+function commerce_promotion_entity_base_field_info(EntityTypeInterface $entity_type): array {
+  return \Drupal::service(CommercePromotionHooks::class)->entityBaseFieldInfo($entity_type);
+}
+
+/**
+ * Implements hook_cron().
+ */
+#[LegacyHook]
+function commerce_promotion_cron(): void {
+  \Drupal::service(CommercePromotionHooks::class)->cron();
+}
+
+/**
+ * Implements hook_gin_content_form_routes().
+ */
+#[LegacyHook]
+function commerce_promotion_gin_content_form_routes() {
+  return \Drupal::service(CommercePromotionHooks::class)->ginContentFormRoutes();
+}
+
+/**
+ * Implements hook_views_data().
+ */
+#[LegacyHook]
+function commerce_promotion_views_data(): array {
+  return \Drupal::service(CommercePromotionViewsHooks::class)->viewsData();
+}
