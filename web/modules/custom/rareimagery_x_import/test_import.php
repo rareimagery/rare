@@ -10,103 +10,87 @@ $grok = \Drupal::service('rareimagery_x_import.grok');
 
 $usernames = ['elonmusk', 'alphafox', 'clownworld', 'doctorclownphd', 'ksjcreative'];
 
-echo "=== Creating 5 Demo Creator X Profiles ===\n\n";
+echo "=== Creating 5 Demo Creator X Profiles + Stores + Products ===\n\n";
+
+$fake_products = [
+  'elonmusk' => [
+    ['title' => 'Tesla Cybertruck Blueprint (Digital Print)', 'price' => 29.99, 'desc' => 'High-res printable blueprint. Own the future.'],
+    ['title' => 'Grok AI Prompt Pack', 'price' => 9.99, 'desc' => '50 truth-seeking prompts for your own Grok.'],
+    ['title' => 'Mars Colony NFT', 'price' => 199.99, 'desc' => 'Limited edition digital land on Mars.'],
+  ],
+  'alphafox' => [
+    ['title' => 'Prank Kit Digital Guide', 'price' => 14.99, 'desc' => '10 epic pranks – step-by-step videos.'],
+    ['title' => 'Tannerite Safety Poster Pack', 'price' => 4.99, 'desc' => 'Humorous safety prints.'],
+    ['title' => 'Marshmallow Egg Recipe eBook', 'price' => 7.99, 'desc' => 'Ultimate prank recipe collection.'],
+  ],
+  'clownworld' => [
+    ['title' => 'Clown World Meme NFT Pack', 'price' => 19.99, 'desc' => '10 viral memes as collectibles.'],
+    ['title' => 'Election Circus Print', 'price' => 12.99, 'desc' => '40% Dem sweep poster.'],
+    ['title' => '🤡 Daily Dose Sticker Sheet (Digital)', 'price' => 5.99, 'desc' => 'Printable clown stickers.'],
+  ],
+  'doctorclownphd' => [
+    ['title' => 'Laughter Medicine Prescription (Digital)', 'price' => 8.99, 'desc' => 'Personalized clown doctor cert.'],
+    ['title' => '🤡 Health Meme Pack', 'price' => 4.99, 'desc' => 'Funny health advice images.'],
+  ],
+  'ksjcreative' => [
+    ['title' => 'Creative Project Template Pack', 'price' => 24.99, 'desc' => '5 Canva/Figma templates.'],
+    ['title' => 'Digital Innovation eBook', 'price' => 12.99, 'desc' => 'Agency secrets.'],
+  ],
+];
 
 foreach ($usernames as $username) {
   echo "\n--- Processing @{$username} ---\n";
 
-  // Mock profile data from X scrape
-  $mock_profiles = [
-    'elonmusk' => [
-      'name' => 'Elon Musk',
-      'bio' => 'CEO of Tesla, SpaceX, xAI. Building the future.',
-      'followers' => 236200000,
-      'top_posts' => [
-        ['text' => 'Only Grok speaks the truth. Only truthful AI is safe.', 'likes' => 14000, 'retweets' => 13000],
-        ['text' => 'Next I’m buying Coca-Cola to put the cocaine back in', 'likes' => 168000, 'retweets' => 755000],
-        ['text' => 'The future is gonna be so 🔥 🇺🇸', 'likes' => 57000, 'retweets' => 212000],
-      ],
-      'followers_sample' => [
-        ['username' => 'tesla', 'name' => 'Tesla', 'followers' => 20000000],
-        ['username' => 'spacex', 'name' => 'SpaceX', 'followers' => 40000000],
-      ],
-      'metrics' => ['engagement_score' => 95, 'audience_quality' => 'elite', 'summary' => 'World\\'s biggest influencer. Massive buying power.'],
-    ],
-    'alphafox' => [
-      'name' => 'AlphaFox',
-      'bio' => 'X Fox 🦊✝️ Earth',
-      'followers' => 830900,
-      'top_posts' => [
-        ['text' => 'Never empty your mag into a lawn mower filled with tannerite unless you don’t require legs 😨', 'likes' => 287, 'retweets' => 303],
-        ['text' => 'Marshmallow egg prank 😬', 'likes' => 2500, 'retweets' => 15000],
-      ],
-      'followers_sample' => [
-        ['username' => 'prankster1', 'name' => 'Prankster', 'followers' => 50000],
-      ],
-      'metrics' => ['engagement_score' => 85, 'audience_quality' => 'high', 'summary' => 'Viral prank content creator.'],
-    ],
-    'clownworld' => [
-      'name' => 'Clown World ™ 🤡',
-      'bio' => 'The circus never stops. Uploads daily. DM for credit 📩',
-      'followers' => 3100000,
-      'top_posts' => [
-        ['text' => 'Markets now show a 40% chance of a Democratic sweep in 2028.', 'likes' => 391, 'retweets' => 41],
-        ['text' => 'Thoughts? (image post)', 'likes' => 6300, 'retweets' => 24000],
-      ],
-      'followers_sample' => [
-        ['username' => 'kalshi', 'name' => 'Kalshi', 'followers' => 100000],
-      ],
-      'metrics' => ['engagement_score' => 88, 'audience_quality' => 'engaged', 'summary' => 'Political meme powerhouse with own store.'],
-    ],
-    'doctorclownphd' => [
-      'name' => 'Doctor 🤡',
-      'bio' => 'Laughter is the best medicine 💊 🤡🤣',
-      'followers' => 8,
-      'top_posts' => [],
-      'followers_sample' => [],
-      'metrics' => ['engagement_score' => 10, 'audience_quality' => 'new', 'summary' => 'Emerging clown doctor content.'],
-    ],
-    'ksjcreative' => [
-      'name' => 'KSJ Creative (Mock - Account not found)',
-      'bio' => 'Creative agency for digital innovation.',
-      'followers' => 5000,
-      'top_posts' => [
-        ['text' => 'New creative project launch!', 'likes' => 100, 'retweets' => 20],
-      ],
-      'followers_sample' => [],
-      'metrics' => ['engagement_score' => 60, 'audience_quality' => 'medium', 'summary' => 'Mock creative profile.'],
-    ],
-  ];
-
   $mock = $mock_profiles[$username] ?? $mock_profiles['ksjcreative'];
 
-  $node = \Drupal::entityTypeManager()->getStorage('node')->create([
+  // 1. Create Profile
+  $profile = \Drupal::entityTypeManager()->getStorage('node')->create([
     'type' => 'creator_x_profile',
-    'title' => $mock['name'] . ' - X Profile (Demo)',
+    'title' => $mock['name'] . ' Store Profile',
     'status' => 1,
     'field_x_username' => $username,
-    'field_bio_description' => [
-      'value' => '<p>' . htmlspecialchars($mock['bio']) . '</p>',
-      'format' => 'basic_html',
-    ],
+    'field_bio_description' => ['value' => '<p>' . htmlspecialchars($mock['bio']) . '</p>', 'format' => 'basic_html'],
     'field_follower_count' => $mock['followers'],
-    'field_top_posts' => array_map(function($post) {
-      return ['value' => json_encode($post)];
-    }, $mock['top_posts']),
-    'field_top_followers' => array_map(function($f) {
-      return ['value' => json_encode($f)];
-    }, $mock['followers_sample']),
-    'field_metrics' => [
-      'value' => json_encode($mock['metrics']),
-    ],
+    'field_top_posts' => array_map(fn($post) => ['value' => json_encode($post)], $mock['top_posts'] ?? []),
+    'field_top_followers' => array_map(fn($f) => ['value' => json_encode($f)], $mock['followers_sample'] ?? []),
+    'field_metrics' => ['value' => json_encode($mock['metrics'])],
   ]);
-  $node->save();
+  $profile->save();
+  $profile_id = $profile->id();
+  echo "Profile ID: {$profile_id}\n";
 
-  echo "Created Node ID: " . $node->id() . " for @{$username}\n";
+  // 2. Create Store
+  $store = \Drupal::entityTypeManager()->getStorage('commerce_store')->create([
+    'type' => 'default',  // or 'creator_store'
+    'name' => $mock['name'] . ' Creator Store',
+    'mail' => $username . '@rareimagery.net',
+    'field_store_slug' => $username,
+    'field_linked_x_profile' => ['target_id' => $profile_id],
+    'status' => 1,
+  ]);
+  $store->save();
+  $store_id = $store->id();
+  echo "Store ID: {$store_id}\n";
+
+  // Link back
+  $profile->set('field_linked_store', ['target_id' => $store_id]);
+  $profile->save();
+
+  // 3. Create Products
+  foreach ($fake_products[$username] ?? [['title' => 'Demo Product', 'price' => 9.99, 'desc' => 'Test item']] as $prod) {
+    $product = \Drupal::entityTypeManager()->getStorage('commerce_product')->create([
+      'type' => 'default',  // or 'digital'
+      'title' => $prod['title'],
+      'stores' => [$store_id],
+      'body' => ['value' => '<p>' . $prod['desc'] . '</p>'],
+    ]);
+    $product->save();
+    echo "  Product: " . $prod['title'] . "\n";
+  }
 }
 
-echo "\n=== 5 DEMO PROFILES CREATED ===\n";
-echo "View all at /admin/content or test frontend /stores/elonmusk etc.\n";
+echo "\n=== FULL BUILD COMPLETE: 5 Profiles + Stores + Products ===\n";
+echo "Test: /stores/elonmusk (add products to cart!)\n";
 
 // If we got a real profile, continue with live data
 echo "   Name: " . $profile['name'] . "\n";
