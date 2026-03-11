@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall hooks for RareImagery XStore.
+ */
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Add subscription fields to x_creator_store nodes.
+ */
+function rareimagery_xstore_update_10001() {
+  $fields = [
+    'field_subscription_status' => [
+      'type' => 'list_string',
+      'label' => 'Subscription Status',
+      'description' => 'Current subscription status for this store.',
+      'settings' => [
+        'allowed_values' => [
+          'pending' => 'Pending',
+          'active' => 'Active',
+          'past_due' => 'Past Due',
+          'canceled' => 'Canceled',
+        ],
+      ],
+      'storage_settings' => [],
+    ],
+    'field_stripe_subscription_id' => [
+      'type' => 'string',
+      'label' => 'Stripe Subscription ID',
+      'description' => 'The Stripe Subscription ID (sub_xxx) for this store.',
+      'settings' => [],
+      'storage_settings' => [
+        'max_length' => 64,
+        'is_ascii' => TRUE,
+        'case_sensitive' => TRUE,
+      ],
+    ],
+    'field_stripe_customer_id' => [
+      'type' => 'string',
+      'label' => 'Stripe Customer ID',
+      'description' => 'The Stripe Customer ID (cus_xxx) for this store owner.',
+      'settings' => [],
+      'storage_settings' => [
+        'max_length' => 64,
+        'is_ascii' => TRUE,
+        'case_sensitive' => TRUE,
+      ],
+    ],
+  ];
+
+  foreach ($fields as $field_name => $info) {
+    // Create field storage if it doesn't exist.
+    if (!FieldStorageConfig::loadByName('node', $field_name)) {
+      FieldStorageConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'type' => $info['type'],
+        'settings' => $info['storage_settings'],
+        'cardinality' => 1,
+        'translatable' => FALSE,
+      ])->save();
+    }
+
+    // Create field instance if it doesn't exist.
+    if (!FieldConfig::loadByName('node', 'x_creator_store', $field_name)) {
+      FieldConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'x_creator_store',
+        'label' => $info['label'],
+        'description' => $info['description'],
+        'required' => FALSE,
+        'settings' => $info['settings'],
+      ])->save();
+    }
+  }
+
+  return t('Added subscription fields to x_creator_store.');
+}

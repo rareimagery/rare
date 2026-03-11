@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - rareimagery_xstore
+name: Audience
+vid: audience
+description: 'Target audience for products (e.g., Pet Lovers, Gamers, Artists).'
+weight: 2

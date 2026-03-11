@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_social_instagram
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_social_instagram
+field_name: field_social_instagram
+entity_type: node
+bundle: creator_profile_theme
+label: 'Instagram URL'
+description: 'Full URL to Instagram profile.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

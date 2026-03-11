@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - rareimagery_xstore
+    - serialization
+  enforced:
+    module:
+      - rareimagery_xstore
+id: dashboard_analytics
+plugin_id: dashboard_analytics
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

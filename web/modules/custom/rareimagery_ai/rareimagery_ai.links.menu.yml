@@ -1,0 +1,13 @@
+rareimagery_ai.settings:
+  title: 'AI Admin Settings'
+  parent: system.admin_config
+  description: 'Configure AI providers (Claude, xAI) for site administration.'
+  route_name: rareimagery_ai.settings
+  weight: 12
+
+rareimagery_ai.chat:
+  title: 'AI Admin'
+  parent: system.admin
+  description: 'Control your Drupal site with AI.'
+  route_name: rareimagery_ai.chat
+  weight: -100

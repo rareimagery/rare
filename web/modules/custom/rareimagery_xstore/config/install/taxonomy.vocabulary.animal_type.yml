@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - rareimagery_xstore
+name: 'Animal Type'
+vid: animal_type
+description: 'Animal types for pet/animal-themed products (e.g., Dog, Cat, Horse, Bird).'
+weight: 3

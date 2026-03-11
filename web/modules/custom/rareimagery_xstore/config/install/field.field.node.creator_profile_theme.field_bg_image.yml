@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bg_image
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_bg_image
+field_name: field_bg_image
+entity_type: node
+bundle: creator_profile_theme
+label: 'Background Image'
+description: 'Upload a background image for the creator page.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  file_directory: 'creator-themes/backgrounds'
+  file_extensions: 'png jpg jpeg gif webp'
+  max_filesize: '5 MB'
+  max_resolution: '3840x2160'
+  min_resolution: ''
+  alt_field: false
+  alt_field_required: false
+  title_field: false
+  title_field_required: false
+  handler: 'default:file'
+  handler_settings: {}
+field_type: image

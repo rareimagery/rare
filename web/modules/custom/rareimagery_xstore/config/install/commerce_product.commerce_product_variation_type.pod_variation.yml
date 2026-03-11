@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+  enforced:
+    module:
+      - rareimagery_xstore
+id: pod_variation
+label: 'POD Variation'
+orderItemType: default
+generateTitle: true

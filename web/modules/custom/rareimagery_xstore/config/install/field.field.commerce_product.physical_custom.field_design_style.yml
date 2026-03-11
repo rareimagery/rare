@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_product.field_design_style
+    - commerce_product.commerce_product_type.physical_custom
+    - taxonomy.vocabulary.design_style
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product.physical_custom.field_design_style
+field_name: field_design_style
+entity_type: commerce_product
+bundle: physical_custom
+label: 'Design Style'
+description: 'Categorize this product.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      design_style: design_style
+    auto_create: false
+field_type: entity_reference

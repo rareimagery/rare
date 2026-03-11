@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_color_scrollbar_thumb
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_color_scrollbar_thumb
+field_name: field_color_scrollbar_thumb
+entity_type: node
+bundle: creator_profile_theme
+label: 'Scrollbar Thumb Color'
+description: 'Custom scrollbar thumb color (hex).'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

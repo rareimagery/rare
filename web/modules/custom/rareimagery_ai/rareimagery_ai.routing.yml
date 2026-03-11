@@ -1,0 +1,31 @@
+rareimagery_ai.settings:
+  path: '/admin/config/rareimagery/ai'
+  defaults:
+    _form: '\Drupal\rareimagery_ai\Form\AiSettingsForm'
+    _title: 'AI Admin Settings'
+  requirements:
+    _permission: 'administer ai admin'
+
+rareimagery_ai.chat:
+  path: '/admin/ai'
+  defaults:
+    _controller: '\Drupal\rareimagery_ai\Controller\AiChatController::page'
+    _title: 'AI Admin'
+  requirements:
+    _permission: 'use ai admin chat'
+
+rareimagery_ai.chat_api:
+  path: '/api/ai/chat'
+  defaults:
+    _controller: '\Drupal\rareimagery_ai\Controller\AiChatController::chat'
+  requirements:
+    _permission: 'use ai admin chat'
+  methods: [POST]
+
+rareimagery_ai.tool_execute:
+  path: '/api/ai/tool'
+  defaults:
+    _controller: '\Drupal\rareimagery_ai\Controller\AiChatController::executeTool'
+  requirements:
+    _permission: 'use ai admin chat'
+  methods: [POST]

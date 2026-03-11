@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_x_printful_store_id
+    - node.type.x_creator_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_x_printful_store_id
+field_name: field_x_printful_store_id
+entity_type: node
+bundle: x_creator_store
+label: 'Printful Store ID'
+description: 'The linked Printful store ID for POD product syncing.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

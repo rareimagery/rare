@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_order
+    - commerce_checkout
+  enforced:
+    module:
+      - rareimagery_xstore
+id: custom_order
+label: 'Custom Order'
+workflow: order_default
+refresh_mode: customer
+refresh_frequency: 30
+sendReceipt: true
+receiptBcc: ''
+generateNumber: true
+numberPattern: 'CUSTOM-{order_id}'
+third_party_settings:
+  commerce_checkout:
+    checkout_flow: rareimagery

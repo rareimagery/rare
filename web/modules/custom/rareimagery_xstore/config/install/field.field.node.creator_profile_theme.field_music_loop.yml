@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_music_loop
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_music_loop
+field_name: field_music_loop
+entity_type: node
+bundle: creator_profile_theme
+label: 'Music Loop'
+description: 'Loop the music track continuously.'
+required: false
+translatable: false
+default_value:
+  - value: true
+default_value_callback: ''
+settings:
+  on_label: 'Loop On'
+  off_label: 'Loop Off'
+field_type: boolean

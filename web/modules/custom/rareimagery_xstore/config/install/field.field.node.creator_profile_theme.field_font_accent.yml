@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_font_accent
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_font_accent
+field_name: field_font_accent
+entity_type: node
+bundle: creator_profile_theme
+label: 'Accent Font'
+description: 'Google Font name for accent text (e.g., VT323).'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

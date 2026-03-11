@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_variation_type.digital_variation
+    - field.storage.commerce_product_variation.commerce_file
+  module:
+    - commerce_file
+    - file
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product_variation.digital_variation.commerce_file
+field_name: commerce_file
+entity_type: commerce_product_variation
+bundle: digital_variation
+label: 'Downloadable File'
+description: 'Upload the digital file(s) customers will receive after purchase.'
+required: true
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  file_directory: 'digital-products/[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'pdf png jpg jpeg gif svg zip psd ai eps tiff webp mp4 mp3 wav'
+  max_filesize: '500 MB'
+  description_field: true
+  handler: 'default:file'
+  handler_settings: {}
+field_type: file

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_stripe_account_id
+    - node.type.x_creator_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_stripe_account_id
+field_name: field_stripe_account_id
+entity_type: node
+bundle: x_creator_store
+label: 'Stripe Connected Account ID'
+description: 'The Stripe Connected Account ID (acct_xxx) for this creator.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

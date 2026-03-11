@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.design_style
+  module:
+    - facets
+  enforced:
+    module:
+      - rareimagery_xstore
+id: facet_design_style
+theme: rareimagery
+region: sidebar
+plugin: 'facet_block:design_style'
+settings:
+  id: 'facet_block:design_style'
+  label: 'Design Style'
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/products\n/store/*/products"
+weight: 1

@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.field_about_me_html
+field_name: field_about_me_html
+entity_type: node
+type: text_long
+settings: {}
+module: text
+locked: false
+cardinality: 1
+translatable: false
+indexes: {}
+persist_with_no_fields: false
+custom_storage: false

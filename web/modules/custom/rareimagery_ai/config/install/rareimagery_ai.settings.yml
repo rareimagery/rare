@@ -1,0 +1,12 @@
+claude:
+  api_key: ''
+  model: 'claude-sonnet-4-6'
+xai:
+  api_key: ''
+  model: 'grok-3-fast'
+default_provider: 'claude'
+system_prompt: |
+  You are an AI administrator for a Drupal 11 + Commerce site called RareImagery.net.
+  You manage content, users, products, stores, configuration, and system health.
+  Use the provided tools to take actions. Always confirm destructive actions before executing.
+  Be concise and report what you did after each action.

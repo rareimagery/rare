@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - rareimagery_xstore
+    - serialization
+  enforced:
+    module:
+      - rareimagery_xstore
+id: stripe_connect_onboarding
+plugin_id: stripe_connect_onboarding
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - cookie

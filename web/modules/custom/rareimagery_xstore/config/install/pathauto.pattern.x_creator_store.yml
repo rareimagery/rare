@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - pathauto
+  enforced:
+    module:
+      - rareimagery_xstore
+id: x_creator_store
+label: 'X Creator Store'
+type: 'canonical_entities:node'
+pattern: 'store/[node:field_x_handle]'
+selection_criteria:
+  - id: 'entity_bundle:node'
+    bundles:
+      x_creator_store: x_creator_store
+    negate: false
+    context_mapping:
+      node: node
+selection_logic: and
+weight: 0

@@ -1,0 +1,18 @@
+name: RareImagery
+type: theme
+description: 'Custom theme for RareImagery.net - X Creator Merch Platform'
+core_version_requirement: ^11
+base theme: olivero
+libraries:
+  - rareimagery/global-styles
+regions:
+  header: Header
+  primary_menu: 'Primary menu'
+  secondary_menu: 'Secondary menu'
+  breadcrumb: Breadcrumb
+  highlighted: Highlighted
+  help: Help
+  content: Content
+  sidebar: Sidebar
+  footer_top: 'Footer top'
+  footer_bottom: 'Footer bottom'

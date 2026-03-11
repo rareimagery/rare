@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_order
+  enforced:
+    module:
+      - rareimagery_xstore
+id: digital_item
+label: 'Digital Download Item'
+orderType: digital_order
+purchasableEntityType: commerce_product_variation
+traits:
+  commerce_license_order_item_type: {}
+locked: false

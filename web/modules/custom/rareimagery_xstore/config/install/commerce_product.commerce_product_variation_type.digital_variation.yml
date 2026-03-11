@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+  enforced:
+    module:
+      - rareimagery_xstore
+id: digital_variation
+label: 'Digital Variation'
+orderItemType: digital_item
+generateTitle: true
+traits:
+  commerce_license: {}
+locked: false

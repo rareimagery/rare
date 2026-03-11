@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_color_scrollbar_track
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_color_scrollbar_track
+field_name: field_color_scrollbar_track
+entity_type: node
+bundle: creator_profile_theme
+label: 'Scrollbar Track Color'
+description: 'Custom scrollbar track color (hex).'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

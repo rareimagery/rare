@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_font_body
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_font_body
+field_name: field_font_body
+entity_type: node
+bundle: creator_profile_theme
+label: 'Body Font'
+description: 'Google Font name for body text (e.g., Space Mono).'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_x_bio
+    - node.type.x_creator_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_x_bio
+field_name: field_x_bio
+entity_type: node
+bundle: x_creator_store
+label: 'X Bio'
+description: 'The creator''s X profile bio text.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: text_long

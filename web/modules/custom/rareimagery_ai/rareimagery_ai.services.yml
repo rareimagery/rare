@@ -1,0 +1,32 @@
+services:
+  rareimagery_ai.tool_registry:
+    class: Drupal\rareimagery_ai\Service\ToolRegistry
+    arguments:
+      - '@entity_type.manager'
+      - '@config.factory'
+      - '@module_handler'
+      - '@database'
+      - '@logger.factory'
+
+  rareimagery_ai.claude_client:
+    class: Drupal\rareimagery_ai\Service\ClaudeClient
+    arguments:
+      - '@config.factory'
+      - '@rareimagery_ai.tool_registry'
+      - '@logger.factory'
+
+  rareimagery_ai.xai_client:
+    class: Drupal\rareimagery_ai\Service\XaiClient
+    arguments:
+      - '@config.factory'
+      - '@rareimagery_ai.tool_registry'
+      - '@logger.factory'
+
+  rareimagery_ai.agent:
+    class: Drupal\rareimagery_ai\Service\AiAgent
+    arguments:
+      - '@rareimagery_ai.claude_client'
+      - '@rareimagery_ai.xai_client'
+      - '@rareimagery_ai.tool_registry'
+      - '@config.factory'
+      - '@logger.factory'

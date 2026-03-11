@@ -1,0 +1,7 @@
+printful:
+  api_key: ''
+  webhook_secret: ''
+subscription:
+  stripe_price_id: ''
+  setup_fee_cents: 500
+  webhook_signing_secret: ''

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_about
+    - node.type.x_creator_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_about
+field_name: field_about
+entity_type: node
+bundle: x_creator_store
+label: 'About'
+description: 'Detailed description about the store, the creator, and what they offer.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: text_long

@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_commerce_store
+    - node.type.x_creator_store
+    - commerce_store.commerce_store_type.creator
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_commerce_store
+field_name: field_commerce_store
+entity_type: node
+bundle: x_creator_store
+label: 'Commerce Store'
+description: 'The linked Commerce store entity for cart/checkout operations.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  handler: 'default:commerce_store'
+  handler_settings:
+    target_bundles:
+      creator: creator
+field_type: entity_reference

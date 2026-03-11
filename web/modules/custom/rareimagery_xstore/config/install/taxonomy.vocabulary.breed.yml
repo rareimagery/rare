@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - rareimagery_xstore
+name: Breed
+vid: breed
+description: 'Specific breeds for animal-themed products (e.g., Golden Retriever, Siamese, Arabian).'
+weight: 4

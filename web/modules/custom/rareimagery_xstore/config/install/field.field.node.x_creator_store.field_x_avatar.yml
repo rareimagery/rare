@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_x_avatar
+    - node.type.x_creator_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_x_avatar
+field_name: field_x_avatar
+entity_type: node
+bundle: x_creator_store
+label: 'X Avatar'
+description: 'The creator''s X profile avatar image.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  file_directory: 'x-stores/avatars'
+  file_extensions: 'png jpg jpeg gif webp'
+  max_filesize: '2 MB'
+  max_resolution: '400x400'
+  min_resolution: ''
+  alt_field: false
+  alt_field_required: false
+  title_field: false
+  title_field_required: false
+  handler: 'default:file'
+  handler_settings: {}
+field_type: image

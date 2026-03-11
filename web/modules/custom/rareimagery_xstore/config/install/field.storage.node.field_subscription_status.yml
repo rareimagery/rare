@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.field_subscription_status
+field_name: field_subscription_status
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    - value: pending
+      label: Pending
+    - value: active
+      label: Active
+    - value: past_due
+      label: 'Past Due'
+    - value: canceled
+      label: Canceled
+module: options
+locked: false
+cardinality: 1
+translatable: false
+indexes: {}
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,9 @@
+chat:
+  version: 1.0
+  js:
+    js/ai-chat.js: {}
+  css:
+    theme:
+      css/ai-chat.css: {}
+  dependencies:
+    - core/drupalSettings

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_x_handle
+    - node.type.x_creator_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_x_handle
+field_name: field_x_handle
+entity_type: node
+bundle: x_creator_store
+label: 'X Handle'
+description: 'The creator''s X (Twitter) handle without the @ symbol.'
+required: true
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

@@ -1,0 +1,56 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - commerce_product.commerce_product_type.physical_pod
+    - core.entity_view_mode.commerce_product.teaser
+  module:
+    - commerce_product
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product.physical_pod.teaser
+targetEntityType: commerce_product
+bundle: physical_pod
+mode: teaser
+content:
+  field_images:
+    label: hidden
+    type: image
+    weight: -10
+    region: content
+    settings:
+      image_style: medium
+      image_link: content
+      image_loading:
+        attribute: lazy
+    third_party_settings: {}
+  title:
+    label: hidden
+    type: string
+    weight: -5
+    region: content
+    settings:
+      link_to_entity: true
+    third_party_settings: {}
+  variations:
+    type: commerce_add_to_cart
+    weight: 1
+    label: hidden
+    settings:
+      default_quantity: '1'
+      combine: true
+      show_quantity: false
+    third_party_settings: {}
+    region: content
+hidden:
+  created: true
+  stores: true
+  uid: true
+  field_store: true
+  field_product_category: true
+  field_design_style: true
+  field_audience: true
+  field_animal_type: true
+  field_breed: true
+  field_printful_product_id: true

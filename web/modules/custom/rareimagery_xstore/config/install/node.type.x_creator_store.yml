@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - rareimagery_xstore
+name: 'X Creator Store'
+type: x_creator_store
+description: 'A branded storefront tied to an X (Twitter) profile. Each store maps 1:1 to a creator handle.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

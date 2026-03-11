@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_product_variation.attribute_size
+    - commerce_product.commerce_product_variation_type.pod_variation
+    - commerce_product.commerce_product_attribute.size
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product_variation.pod_variation.attribute_size
+field_name: attribute_size
+entity_type: commerce_product_variation
+bundle: pod_variation
+label: Size
+description: ''
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  handler: 'default:commerce_product_attribute_value'
+  handler_settings:
+    target_bundles:
+      size: size
+field_type: entity_reference

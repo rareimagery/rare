@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_product.field_animal_type
+    - commerce_product.commerce_product_type.digital_download
+    - taxonomy.vocabulary.animal_type
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product.digital_download.field_animal_type
+field_name: field_animal_type
+entity_type: commerce_product
+bundle: digital_download
+label: 'Animal Type'
+description: 'Categorize this product.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      animal_type: animal_type
+    auto_create: false
+field_type: entity_reference

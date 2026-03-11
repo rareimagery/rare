@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product.field_printful_product_id
+field_name: field_printful_product_id
+entity_type: commerce_product
+type: string
+settings:
+  max_length: 64
+  is_ascii: true
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {}
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_product.field_description
+    - commerce_product.commerce_product_type.physical_pod
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product.physical_pod.field_description
+field_name: field_description
+entity_type: commerce_product
+bundle: physical_pod
+label: Description
+description: 'Detailed product description visible to customers.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  display_summary: false
+field_type: text_with_summary

@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+  enforced:
+    module:
+      - rareimagery_xstore
+id: custom_variation
+label: 'Custom Variation'
+orderItemType: default
+generateTitle: true

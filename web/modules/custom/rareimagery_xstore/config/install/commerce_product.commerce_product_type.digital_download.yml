@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+  enforced:
+    module:
+      - rareimagery_xstore
+id: digital_download
+label: 'Digital Download'
+description: 'Digital products delivered instantly via license and file download after purchase.'
+variationTypes:
+  - digital_variation
+multipleVariations: false
+injectVariationFields: true
+traits: {}
+locked: false

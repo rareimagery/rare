@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_subscription_status
+    - node.type.x_creator_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_subscription_status
+field_name: field_subscription_status
+entity_type: node
+bundle: x_creator_store
+label: 'Subscription Status'
+description: 'The current subscription status for this store.'
+required: false
+translatable: false
+default_value:
+  - value: pending
+default_value_callback: ''
+settings: {}
+field_type: list_string

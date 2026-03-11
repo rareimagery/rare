@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_product_variation.field_printful_variant_id
+    - commerce_product.commerce_product_variation_type.pod_variation
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product_variation.pod_variation.field_printful_variant_id
+field_name: field_printful_variant_id
+entity_type: commerce_product_variation
+bundle: pod_variation
+label: 'Printful Variant ID'
+description: 'The Printful variant ID used for order submission.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

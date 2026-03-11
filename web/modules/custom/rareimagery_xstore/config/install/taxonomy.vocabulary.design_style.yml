@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - rareimagery_xstore
+name: 'Design Style'
+vid: design_style
+description: 'Visual style tags (e.g., Minimalist, Abstract, Photorealistic, Cartoon).'
+weight: 1

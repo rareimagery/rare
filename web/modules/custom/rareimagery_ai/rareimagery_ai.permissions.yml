@@ -1,0 +1,8 @@
+administer ai admin:
+  title: 'Administer AI Admin'
+  description: 'Access the AI admin chat and configure AI providers.'
+  restrict access: true
+
+use ai admin chat:
+  title: 'Use AI Admin Chat'
+  description: 'Send commands to the AI admin assistant.'

@@ -1,0 +1,44 @@
+administer x creator stores:
+  title: 'Administer X Creator Stores'
+  description: 'Full admin access to all creator store settings and configuration.'
+  restrict access: true
+
+manage own x store:
+  title: 'Manage own X Store'
+  description: 'Allows creators to manage their own storefront, products, and orders.'
+
+'restful get store_profile':
+  title: 'Access store profile API'
+
+'restful get current_user_store':
+  title: 'Access own stores API'
+
+'restful get dashboard_analytics':
+  title: 'Access dashboard analytics API'
+
+'restful post shipping_rates':
+  title: 'Request shipping rates API'
+
+'restful post checkout':
+  title: 'Submit checkout API'
+
+'restful post printful_sync_trigger':
+  title: 'Trigger Printful sync API'
+
+'restful post stripe_connect_onboarding':
+  title: 'Start Stripe Connect onboarding API'
+
+'restful get x_profile_preview':
+  title: 'Preview X profile data'
+
+'restful post store_create':
+  title: 'Create store via API'
+
+'restful post subscription_checkout':
+  title: 'Create subscription checkout session'
+
+'restful post subscription_portal':
+  title: 'Access subscription billing portal'
+
+'restful get subscription_status':
+  title: 'View subscription status'

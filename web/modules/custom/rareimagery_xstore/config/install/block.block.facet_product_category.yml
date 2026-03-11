@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.product_category
+  module:
+    - facets
+  enforced:
+    module:
+      - rareimagery_xstore
+id: facet_product_category
+theme: rareimagery
+region: sidebar
+plugin: 'facet_block:product_category'
+settings:
+  id: 'facet_block:product_category'
+  label: 'Product Category'
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/products\n/store/*/products"
+weight: 0

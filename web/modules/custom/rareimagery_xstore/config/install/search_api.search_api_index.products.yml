@@ -1,0 +1,93 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.search_api_server.default
+  module:
+    - search_api
+    - commerce_product
+  enforced:
+    module:
+      - rareimagery_xstore
+id: products
+name: Products
+description: 'Index of commerce products for storefront search and faceted browsing.'
+read_only: false
+field_settings:
+  title:
+    label: Title
+    datasource_id: 'entity:commerce_product'
+    property_path: title
+    type: text
+    boost: 5.0
+  type:
+    label: 'Product Type'
+    datasource_id: 'entity:commerce_product'
+    property_path: type
+    type: string
+  status:
+    label: Status
+    datasource_id: 'entity:commerce_product'
+    property_path: status
+    type: boolean
+  field_store:
+    label: 'Creator Store'
+    datasource_id: 'entity:commerce_product'
+    property_path: field_store
+    type: integer
+  field_product_category:
+    label: 'Product Category'
+    datasource_id: 'entity:commerce_product'
+    property_path: field_product_category
+    type: integer
+  field_design_style:
+    label: 'Design Style'
+    datasource_id: 'entity:commerce_product'
+    property_path: field_design_style
+    type: integer
+  field_audience:
+    label: Audience
+    datasource_id: 'entity:commerce_product'
+    property_path: field_audience
+    type: integer
+  field_animal_type:
+    label: 'Animal Type'
+    datasource_id: 'entity:commerce_product'
+    property_path: field_animal_type
+    type: integer
+  field_breed:
+    label: Breed
+    datasource_id: 'entity:commerce_product'
+    property_path: field_breed
+    type: integer
+  created:
+    label: Created
+    datasource_id: 'entity:commerce_product'
+    property_path: created
+    type: date
+datasource_settings:
+  'entity:commerce_product':
+    bundles:
+      default: true
+      selected: {}
+    languages:
+      default: true
+      selected: {}
+processor_settings:
+  add_url: {}
+  entity_status: {}
+  html_filter:
+    all_fields: false
+    fields:
+      - title
+  ignorecase:
+    all_fields: true
+  tokenizer:
+    all_fields: true
+    spaces: '[^\p{L}\p{N}]'
+tracker_settings:
+  default: {}
+options:
+  index_directly: true
+  cron_limit: 50
+server: default

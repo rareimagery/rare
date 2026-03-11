@@ -1,0 +1,62 @@
+services:
+  rareimagery_xstore.platform_fee_subscriber:
+    class: Drupal\rareimagery_xstore\EventSubscriber\PlatformFeeSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  rareimagery_xstore.order_type_resolver:
+    class: Drupal\rareimagery_xstore\Resolver\StoreOrderTypeResolver
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: commerce_order.order_type_resolver, priority: 100 }
+
+  rareimagery_xstore.store_manager:
+    class: Drupal\rareimagery_xstore\Service\StoreManagerService
+    arguments: ['@entity_type.manager']
+
+  rareimagery_xstore.printful_sync:
+    class: Drupal\rareimagery_xstore\Service\PrintfulSyncService
+    arguments:
+      - '@http_client'
+      - '@logger.factory'
+      - '@entity_type.manager'
+      - '@config.factory'
+      - '@rareimagery_xstore.store_manager'
+
+  rareimagery_xstore.creator_store_resolver:
+    class: Drupal\rareimagery_xstore\Resolver\CreatorStoreResolver
+    arguments: ['@current_route_match', '@rareimagery_xstore.store_manager']
+    tags:
+      - { name: commerce_store.store_resolver, priority: 200 }
+
+  rareimagery_xstore.stripe_connect_subscriber:
+    class: Drupal\rareimagery_xstore\EventSubscriber\StripeConnectSubscriber
+    arguments: ['@entity_type.manager', '@rareimagery_xstore.store_manager']
+    tags:
+      - { name: event_subscriber }
+
+  rareimagery_xstore.creator_theme:
+    class: Drupal\rareimagery_xstore\Service\CreatorThemeService
+    arguments: ['@entity_type.manager', '@file_url_generator']
+
+  rareimagery_xstore.x_profile_scraper:
+    class: Drupal\rareimagery_xstore\Service\XProfileScraperService
+    arguments:
+      - '@http_client'
+      - '@logger.factory'
+      - '@cache.default'
+      - '@file_system'
+      - '@entity_type.manager'
+
+  rareimagery_xstore.printful_order_subscriber:
+    class: Drupal\rareimagery_xstore\EventSubscriber\PrintfulOrderSubscriber
+    arguments: ['@rareimagery_xstore.printful_sync']
+    tags:
+      - { name: event_subscriber }
+
+  rareimagery_xstore.subscription_manager:
+    class: Drupal\rareimagery_xstore\Service\SubscriptionManagerService
+    arguments:
+      - '@entity_type.manager'
+      - '@config.factory'
+      - '@logger.factory'

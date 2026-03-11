@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.field_bg_animation
+field_name: field_bg_animation
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    - value: none
+      label: None
+    - value: slow-scroll
+      label: 'Slow Scroll'
+    - value: pulse
+      label: Pulse
+    - value: shimmer
+      label: Shimmer
+module: options
+locked: false
+cardinality: 1
+translatable: false
+indexes: {}
+persist_with_no_fields: false
+custom_storage: false

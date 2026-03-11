@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_layout_blocks
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_layout_blocks
+field_name: field_layout_blocks
+entity_type: node
+bundle: creator_profile_theme
+label: 'Layout Blocks'
+description: 'JSON array defining the order and visibility of page blocks.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: text_long

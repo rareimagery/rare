@@ -30,7 +30,7 @@ services:
     volumes:
       - ./web:/var/www/html
     ports:
-      - "${DRUPAL_PORT:-8080}:80"
+      - "${DRUPAL_PORT:-80}:80"
     command: >
       bash -c "chown -R www-data:www-data /var/www/html &&
                apache2-foreground"

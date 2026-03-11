@@ -1,0 +1,25 @@
+global-styles:
+  version: 1.0
+  css:
+    theme:
+      css/style.css: {}
+
+storefront-app:
+  version: 1.0
+  js:
+    dist/storefront/assets/main.js: { minified: true, preprocess: false, attributes: { type: module } }
+  css:
+    theme:
+      dist/storefront/assets/main.css: { minified: true, preprocess: false }
+  dependencies:
+    - core/drupalSettings
+
+dashboard-app:
+  version: 1.0
+  js:
+    dist/dashboard/assets/main.js: { minified: true, preprocess: false, attributes: { type: module } }
+  css:
+    theme:
+      dist/dashboard/assets/main.css: { minified: true, preprocess: false }
+  dependencies:
+    - core/drupalSettings

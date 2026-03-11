@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.audience
+  module:
+    - facets
+  enforced:
+    module:
+      - rareimagery_xstore
+id: facet_audience
+theme: rareimagery
+region: sidebar
+plugin: 'facet_block:audience'
+settings:
+  id: 'facet_block:audience'
+  label: 'Audience'
+  label_display: visible
+  provider: facets
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: "/products\n/store/*/products"
+weight: 2

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_font_size_scale
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_font_size_scale
+field_name: field_font_size_scale
+entity_type: node
+bundle: creator_profile_theme
+label: 'Font Size Scale'
+description: 'Font size multiplier from 0.8 to 1.4 (e.g., 1.0).'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_store
+    - node
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.field_commerce_store
+field_name: field_commerce_store
+entity_type: node
+type: entity_reference
+settings:
+  target_type: commerce_store
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {}
+persist_with_no_fields: false
+custom_storage: false

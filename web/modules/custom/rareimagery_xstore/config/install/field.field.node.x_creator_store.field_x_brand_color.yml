@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_x_brand_color
+    - node.type.x_creator_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_x_brand_color
+field_name: field_x_brand_color
+entity_type: node
+bundle: x_creator_store
+label: 'Brand Color'
+description: 'Hex color code for the store''s brand accent color (e.g., #1DA1F2).'
+required: false
+translatable: false
+default_value:
+  - value: '#000000'
+default_value_callback: ''
+settings: {}
+field_type: string

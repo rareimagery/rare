@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: creator
+label: 'Creator Store'
+description: 'Commerce store entity linked to an X Creator Store node for cart/checkout operations.'
+traits: {}
+locked: false

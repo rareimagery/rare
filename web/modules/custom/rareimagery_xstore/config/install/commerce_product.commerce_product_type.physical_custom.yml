@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+  enforced:
+    module:
+      - rareimagery_xstore
+id: physical_custom
+label: 'Physical - Custom/Handmade'
+description: 'Custom or handmade physical products fulfilled manually by the creator.'
+variationTypes:
+  - custom_variation
+multipleVariations: true
+injectVariationFields: true
+traits: {}
+locked: false

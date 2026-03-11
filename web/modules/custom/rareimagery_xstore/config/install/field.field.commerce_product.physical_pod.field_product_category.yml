@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_product.field_product_category
+    - commerce_product.commerce_product_type.physical_pod
+    - taxonomy.vocabulary.product_category
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product.physical_pod.field_product_category
+field_name: field_product_category
+entity_type: commerce_product
+bundle: physical_pod
+label: 'Product Category'
+description: 'Categorize this product.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      product_category: product_category
+    auto_create: false
+field_type: entity_reference

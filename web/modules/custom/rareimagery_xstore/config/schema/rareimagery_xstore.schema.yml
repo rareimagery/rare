@@ -1,0 +1,27 @@
+rareimagery_xstore.settings:
+  type: config_object
+  label: 'RareImagery XStore settings'
+  mapping:
+    printful:
+      type: mapping
+      label: 'Printful settings'
+      mapping:
+        api_key:
+          type: string
+          label: 'Printful API Key'
+        webhook_secret:
+          type: string
+          label: 'Printful Webhook Secret'
+    subscription:
+      type: mapping
+      label: 'Subscription settings'
+      mapping:
+        stripe_price_id:
+          type: string
+          label: 'Stripe Price ID for monthly subscription'
+        setup_fee_cents:
+          type: integer
+          label: 'One-time setup fee in cents'
+        webhook_signing_secret:
+          type: string
+          label: 'Stripe Subscription Webhook Signing Secret'

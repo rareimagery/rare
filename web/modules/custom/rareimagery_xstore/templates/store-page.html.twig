@@ -1,0 +1,112 @@
+{#
+/**
+ * @file
+ * Template for the X Creator Store storefront page.
+ *
+ * Available variables:
+ * - store: The x_creator_store node entity.
+ * - handle: The X handle string.
+ * - bio: The creator's X bio.
+ * - avatar_url: URL to the avatar image.
+ * - banner_url: URL to the banner image.
+ * - followers: Follower count (integer).
+ * - verified: Whether the account is verified (boolean).
+ * - brand_color: Hex color string for brand accent.
+ * - tagline: Store tagline string.
+ * - products: Array of rendered product teasers.
+ * - facets: Array of rendered facet blocks for filtering.
+ */
+#}
+<div class="xstore" style="--brand-color: {{ brand_color }}">
+
+  {# Banner Section #}
+  <div class="xstore__banner">
+    {% if banner_url %}
+      <img src="{{ banner_url }}" alt="@{{ handle }} banner" class="xstore__banner-img" loading="eager">
+    {% else %}
+      <div class="xstore__banner-placeholder" style="background-color: {{ brand_color }}"></div>
+    {% endif %}
+  </div>
+
+  {# Profile Header #}
+  <header class="xstore__header">
+    <div class="xstore__header-inner">
+      <div class="xstore__avatar">
+        {% if avatar_url %}
+          <img src="{{ avatar_url }}" alt="@{{ handle }}" class="xstore__avatar-img">
+        {% else %}
+          <div class="xstore__avatar-placeholder">
+            {{ handle|first|upper }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="xstore__profile">
+        <h1 class="xstore__name">
+          @{{ handle }}
+          {% if verified %}
+            <span class="xstore__verified" title="Verified on X">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-label="Verified">
+                <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91c-1.31.67-2.2 1.91-2.2 3.34s.89 2.67 2.2 3.34c-.47 1.39-.2 2.9.8 3.91s2.52 1.26 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.68-.88 3.34-2.19c1.39.45 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34zm-11.71 4.2L6.8 12.46l1.41-1.42 2.26 2.26 4.8-5.23 1.47 1.36-6.2 6.77z"/>
+              </svg>
+            </span>
+          {% endif %}
+        </h1>
+
+        {% if tagline %}
+          <p class="xstore__tagline">{{ tagline }}</p>
+        {% endif %}
+
+        {% if bio %}
+          <p class="xstore__bio">{{ bio }}</p>
+        {% endif %}
+
+        <div class="xstore__meta">
+          {% if followers > 0 %}
+            <span class="xstore__followers">
+              <strong>{{ followers|number_format }}</strong> followers on X
+            </span>
+          {% endif %}
+          <a href="https://x.com/{{ handle }}" class="xstore__x-link" target="_blank" rel="noopener">
+            View on X
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {# Products Section with Facet Sidebar #}
+  <div class="xstore__content">
+    {% if facets is not empty %}
+    <aside class="xstore__sidebar">
+      <h3 class="xstore__sidebar-title">Filter Products</h3>
+      {% for facet in facets %}
+        <div class="xstore__facet">
+          {{ facet }}
+        </div>
+      {% endfor %}
+    </aside>
+    {% endif %}
+
+    <main class="xstore__products">
+      <div class="xstore__products-header">
+        <h2 class="xstore__products-title">Products</h2>
+      </div>
+
+      {% if products|length > 0 %}
+        <div class="xstore__product-grid">
+          {% for product in products %}
+            <div class="xstore__product-card">
+              {{ product }}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="xstore__empty">
+          <p>No products available yet. Check back soon!</p>
+        </div>
+      {% endif %}
+    </main>
+  </div>
+
+</div>

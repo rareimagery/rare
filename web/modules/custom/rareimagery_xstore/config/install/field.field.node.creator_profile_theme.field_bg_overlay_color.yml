@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bg_overlay_color
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_bg_overlay_color
+field_name: field_bg_overlay_color
+entity_type: node
+bundle: creator_profile_theme
+label: 'Background Overlay Color'
+description: 'Hex color for semi-transparent overlay on background image.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bg_animation
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_bg_animation
+field_name: field_bg_animation
+entity_type: node
+bundle: creator_profile_theme
+label: 'Background Animation'
+description: 'Animation effect for the background.'
+required: false
+translatable: false
+default_value:
+  - value: none
+default_value_callback: ''
+settings: {}
+field_type: list_string

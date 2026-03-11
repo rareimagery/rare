@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bg_image_url
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_bg_image_url
+field_name: field_bg_image_url
+entity_type: node
+bundle: creator_profile_theme
+label: 'Background Image URL'
+description: 'External URL for background image (used if no uploaded image).'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

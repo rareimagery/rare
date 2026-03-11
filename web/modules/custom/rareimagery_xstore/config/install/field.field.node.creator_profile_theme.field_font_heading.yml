@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_font_heading
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_font_heading
+field_name: field_font_heading
+entity_type: node
+bundle: creator_profile_theme
+label: 'Heading Font'
+description: 'Google Font name for headings (e.g., Bebas Neue).'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

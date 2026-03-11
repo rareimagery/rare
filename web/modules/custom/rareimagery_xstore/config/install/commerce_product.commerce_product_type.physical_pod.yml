@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_product
+  enforced:
+    module:
+      - rareimagery_xstore
+id: physical_pod
+label: 'Physical - Print on Demand'
+description: 'Products fulfilled via Printful print-on-demand. Automatically synced and shipped by Printful.'
+variationTypes:
+  - pod_variation
+multipleVariations: true
+injectVariationFields: true
+traits: {}
+locked: false

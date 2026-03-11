@@ -1,0 +1,298 @@
+/* ============================================
+   RareImagery.net - X Creator Merch Platform
+   Custom Theme Styles
+   ============================================ */
+
+:root {
+  --ri-primary: #000000;
+  --ri-accent: #1DA1F2;
+  --ri-bg: #ffffff;
+  --ri-bg-secondary: #f7f9fa;
+  --ri-text: #0f1419;
+  --ri-text-secondary: #536471;
+  --ri-border: #eff3f4;
+  --ri-radius: 16px;
+  --ri-radius-sm: 8px;
+}
+
+/* ---- Store Page Layout ---- */
+
+.xstore {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--ri-bg);
+}
+
+/* Banner */
+.xstore__banner {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: var(--ri-bg-secondary);
+}
+
+.xstore__banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.xstore__banner-placeholder {
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+}
+
+/* Header / Profile */
+.xstore__header {
+  padding: 0 20px;
+  border-bottom: 1px solid var(--ri-border);
+}
+
+.xstore__header-inner {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 12px 0 20px;
+  position: relative;
+}
+
+.xstore__avatar {
+  flex-shrink: 0;
+  margin-top: -48px;
+}
+
+.xstore__avatar-img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 4px solid var(--ri-bg);
+  object-fit: cover;
+}
+
+.xstore__avatar-placeholder {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 4px solid var(--ri-bg);
+  background: var(--brand-color, var(--ri-accent));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.xstore__profile {
+  flex: 1;
+  min-width: 0;
+}
+
+.xstore__name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ri-text);
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.xstore__verified {
+  color: var(--ri-accent);
+  display: inline-flex;
+}
+
+.xstore__tagline {
+  font-size: 1rem;
+  color: var(--brand-color, var(--ri-accent));
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.xstore__bio {
+  font-size: 0.938rem;
+  color: var(--ri-text);
+  line-height: 1.5;
+  margin: 0 0 8px;
+}
+
+.xstore__meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--ri-text-secondary);
+}
+
+.xstore__followers strong {
+  color: var(--ri-text);
+}
+
+.xstore__x-link {
+  color: var(--ri-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.xstore__x-link:hover {
+  text-decoration: underline;
+}
+
+/* Content Layout with Facet Sidebar */
+.xstore__content {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+  padding: 24px 20px;
+}
+
+.xstore__sidebar {
+  border-right: 1px solid var(--ri-border);
+  padding-right: 20px;
+}
+
+.xstore__sidebar-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ri-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 16px;
+}
+
+.xstore__facet {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ri-border);
+}
+
+.xstore__facet:last-child {
+  border-bottom: none;
+}
+
+.xstore__facet h3 {
+  font-size: 0.938rem;
+  font-weight: 600;
+  color: var(--ri-text);
+  margin: 0 0 8px;
+}
+
+.xstore__facet ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.xstore__facet li {
+  padding: 4px 0;
+}
+
+.xstore__facet a {
+  color: var(--ri-text);
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.xstore__facet a:hover {
+  color: var(--brand-color, var(--ri-accent));
+}
+
+.xstore__facet .facet-item--active a {
+  font-weight: 600;
+  color: var(--brand-color, var(--ri-accent));
+}
+
+.xstore__facet .facet-item__count {
+  color: var(--ri-text-secondary);
+  font-size: 0.8rem;
+}
+
+/* Product Grid */
+.xstore__products {
+  padding: 0;
+}
+
+.xstore__products-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.xstore__products-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ri-text);
+  margin: 0;
+}
+
+.xstore__product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.xstore__product-card {
+  border: 1px solid var(--ri-border);
+  border-radius: var(--ri-radius);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+  background: var(--ri-bg);
+}
+
+.xstore__product-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.xstore__empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ri-text-secondary);
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 768px) {
+  .xstore__banner {
+    height: 150px;
+  }
+
+  .xstore__header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .xstore__avatar {
+    margin-top: -40px;
+  }
+
+  .xstore__avatar-img,
+  .xstore__avatar-placeholder {
+    width: 72px;
+    height: 72px;
+  }
+
+  .xstore__content {
+    grid-template-columns: 1fr;
+  }
+
+  .xstore__sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--ri-border);
+    padding-right: 0;
+    padding-bottom: 16px;
+  }
+
+  .xstore__product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .xstore__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

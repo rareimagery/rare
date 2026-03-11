@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - rareimagery_xstore
+name: 'Product Category'
+vid: product_category
+description: 'Categories for merchandise products (e.g., T-Shirts, Mugs, Prints, Digital Art).'
+weight: 0

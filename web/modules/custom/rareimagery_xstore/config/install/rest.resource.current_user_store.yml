@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - rareimagery_xstore
+    - serialization
+  enforced:
+    module:
+      - rareimagery_xstore
+id: current_user_store
+plugin_id: current_user_store
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - cookie

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_music_url
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_music_url
+field_name: field_music_url
+entity_type: node
+bundle: creator_profile_theme
+label: 'Music URL'
+description: 'Direct MP3/OGG link or SoundCloud/YouTube embed URL.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

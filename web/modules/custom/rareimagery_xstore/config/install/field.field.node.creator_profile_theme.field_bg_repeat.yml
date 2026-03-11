@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bg_repeat
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_bg_repeat
+field_name: field_bg_repeat
+entity_type: node
+bundle: creator_profile_theme
+label: 'Background Repeat'
+description: 'How the background image is displayed.'
+required: false
+translatable: false
+default_value:
+  - value: cover
+default_value_callback: ''
+settings: {}
+field_type: list_string

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_bg_color
+    - node.type.creator_profile_theme
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.creator_profile_theme.field_bg_color
+field_name: field_bg_color
+entity_type: node
+bundle: creator_profile_theme
+label: 'Background Color'
+description: 'Hex color for page background (e.g., #0a0a0a).'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings: {}
+field_type: string

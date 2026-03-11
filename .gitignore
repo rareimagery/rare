@@ -1,19 +1,31 @@
-# Drupal
+# Drupal core & vendor (installed via composer, not tracked)
+web/core/
+web/modules/contrib/
+web/themes/contrib/
+web/profiles/
 web/sites/*/files/*
 !web/sites/*/files/.htaccess
 web/sites/development.services.yml
 web/sites/default/settings.local.php
+vendor/
 
 # Node
+node_modules/
 frontend/node_modules/
 frontend/.next/
 frontend/out/
 frontend/.env.local
+.next/
+.pnpm-store/
 
 # Docker
 .env
+.env.local
 *.log
 .DS_Store
 
 # Secrets
 x-consumer-key.txt
+
+# IDE
+.vscode/

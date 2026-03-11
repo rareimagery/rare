@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - rareimagery_xstore
+    - serialization
+  enforced:
+    module:
+      - rareimagery_xstore
+id: store_create
+plugin_id: store_create
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - cookie

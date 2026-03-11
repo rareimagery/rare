@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_store_logo
+    - node.type.x_creator_store
+  enforced:
+    module:
+      - rareimagery_xstore
+id: node.x_creator_store.field_store_logo
+field_name: field_store_logo
+entity_type: node
+bundle: x_creator_store
+label: 'Store Logo'
+description: 'The store logo or branding image. Separate from the X profile avatar.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  file_directory: 'x-stores/logos'
+  file_extensions: 'png jpg jpeg gif webp svg'
+  max_filesize: '5 MB'
+  max_resolution: '1200x1200'
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: false
+  title_field: false
+  title_field_required: false
+  handler: 'default:file'
+  handler_settings: {}
+field_type: image

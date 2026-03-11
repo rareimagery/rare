@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.commerce_product.field_images
+    - commerce_product.commerce_product_type.physical_pod
+  enforced:
+    module:
+      - rareimagery_xstore
+id: commerce_product.physical_pod.field_images
+field_name: field_images
+entity_type: commerce_product
+bundle: physical_pod
+label: 'Product Images'
+description: 'Upload product photos. The first image will be used as the main product image.'
+required: false
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  file_directory: 'products/images'
+  file_extensions: 'png jpg jpeg gif webp'
+  max_filesize: '10 MB'
+  max_resolution: '2400x2400'
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: false
+  title_field: false
+  title_field_required: false
+  handler: 'default:file'
+  handler_settings: {}
+field_type: image

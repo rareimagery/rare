@@ -1,0 +1,13 @@
+rareimagery_xstore.printful_settings:
+  title: 'Printful Settings'
+  parent: system.admin_config
+  description: 'Configure Printful API integration for RareImagery.'
+  route_name: rareimagery_xstore.printful_settings
+  weight: 10
+
+rareimagery_xstore.xai_settings:
+  title: 'xAI / Grok Settings'
+  parent: system.admin_config
+  description: 'Configure xAI (Grok) API keys, model, and AI feature toggles.'
+  route_name: rareimagery_xstore.xai_settings
+  weight: 11

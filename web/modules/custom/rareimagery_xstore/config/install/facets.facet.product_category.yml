@@ -1,0 +1,52 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.search_api_index.products
+  module:
+    - facets
+  enforced:
+    module:
+      - rareimagery_xstore
+id: product_category
+name: 'Product Category'
+url_alias: category
+facet_source_id: 'search_api:views_page__products_search__page_all'
+field_identifier: field_product_category
+query_operator: or
+exclude: false
+use_hierarchy: false
+keep_hierarchy_parents_active: false
+expand_hierarchy: false
+enable_parent_when_child_gets_disabled: true
+hard_limit: 0
+min_count: 1
+missing: false
+only_visible_when_facet_source_is_visible: true
+show_only_one_result: false
+widget:
+  type: links
+  config:
+    show_numbers: true
+    soft_limit: 5
+    soft_limit_settings:
+      show_less_label: 'Show less'
+      show_more_label: 'Show more'
+    show_reset_link: true
+    reset_text: 'Show all'
+    hide_non_narrowing_results: false
+processor_configs:
+  count_widget_order:
+    processor_id: count_widget_order
+    weights:
+      sort: 50
+    settings:
+      sort: DESC
+  display_value_widget_order:
+    processor_id: display_value_widget_order
+    weights:
+      sort: 40
+    settings:
+      sort: ASC
+empty_behavior:
+  behavior: none

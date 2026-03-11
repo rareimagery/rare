@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - rareimagery_xstore
+name: 'Creator Profile Theme'
+type: creator_profile_theme
+description: 'MySpace-style theme customization for a creator storefront. Linked 1:1 to an X Creator Store.'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: false

@@ -1,0 +1,10 @@
+name: 'RareImagery AI Admin'
+type: module
+description: 'AI-powered Drupal site control via Claude and xAI/Grok with tool-use.'
+core_version_requirement: ^10 || ^11
+package: RareImagery
+dependencies:
+  - drupal:node
+  - drupal:user
+  - drupal:system
+  - rareimagery_xstore:rareimagery_xstore

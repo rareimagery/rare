@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_stripe
+  enforced:
+    module:
+      - rareimagery_xstore
+id: rareimagery_stripe
+label: 'RareImagery Stripe'
+weight: 0
+plugin: stripe_payment_element
+configuration:
+  publishable_key: ''
+  secret_key: ''
+  webhook_signing_secret: ''
+  payment_method_usage: on_session
+  capture_method: automatic
+  display_label: 'Credit Card'
+  mode: test
+  payment_method_types:
+    - credit_card
+  collect_billing_information: true
+conditions: {}
+conditionOperator: AND
