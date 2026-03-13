@@ -1,0 +1,436 @@
+{
+  "version": "1.0",
+  "creations": [
+    {
+      "id": "bc_001",
+      "name": "Midnight Scene Queen",
+      "subculture": "scene",
+      "rating": 5,
+      "creator_x_handle": null,
+      "why_it_works": "The contrast between near-black page bg and hot pink accent creates instant scene recognition. Stars tiled at 0.15 opacity add texture without killing readability. Boogaloo at tracking-widest makes the store title feel like a band name. The chunky_button player with a sparkle label matches the chaos energy perfectly.",
+      "standout_variables": {
+        "colors.accent_primary": "#ff00cc",
+        "colors.page_bg": "#1a001a",
+        "typography.font_heading": "Boogaloo",
+        "typography.letter_spacing": "tracking-widest",
+        "decorations.corner_decoration": "stars",
+        "decorations.cursor_style": "star",
+        "player.style": "chunky_button"
+      },
+      "full_config": {
+        "meta": {
+          "preset_name": "Midnight Scene Queen",
+          "subculture": "scene",
+          "generated_from": "named_preset",
+          "version": "1.0"
+        },
+        "layout": {
+          "structure": "two_col_left",
+          "sidebar_width": "medium",
+          "content_density": "packed",
+          "section_order": ["header", "player", "top8", "products", "about", "reviews"]
+        },
+        "background": {
+          "type": "tiled_pattern",
+          "color_primary": "#ff00cc",
+          "color_secondary": "#00ffcc",
+          "gradient_direction": null,
+          "pattern_style": "stars",
+          "pattern_opacity": 0.15
+        },
+        "colors": {
+          "page_bg": "#1a001a",
+          "sidebar_bg": "#2d0029",
+          "content_bg": "#1f001f",
+          "card_bg": "#2a0030",
+          "border": "#ff00cc",
+          "accent_primary": "#ff00cc",
+          "accent_secondary": "#00ff99",
+          "text_body": "#ffffff",
+          "text_heading": "#ff00cc",
+          "text_link": "#00ff99",
+          "text_link_hover": "#ffffff",
+          "scrollbar_track": "#1a001a",
+          "scrollbar_thumb": "#ff00cc"
+        },
+        "typography": {
+          "font_heading": "Boogaloo",
+          "font_body": "Nunito",
+          "font_accent": "Pacifico",
+          "heading_size": "text-4xl",
+          "body_size": "text-base",
+          "letter_spacing": "tracking-widest",
+          "text_transform": "none",
+          "text_shadow": "glow"
+        },
+        "header": {
+          "layout": "banner_behind",
+          "avatar_shape": "rounded",
+          "avatar_border_style": "glitter",
+          "avatar_border_color": "#ff00cc",
+          "avatar_size": "lg",
+          "username_style": "glitter",
+          "show_follower_count": true,
+          "show_x_handle": true,
+          "show_mood": true,
+          "mood_icon": "🌟",
+          "mood_text": "Scene forever xoxo"
+        },
+        "player": {
+          "enabled": true,
+          "type": "x_spaces_link",
+          "position": "sidebar_top",
+          "style": "chunky_button",
+          "label": "Tune In 🌟",
+          "color_bg": "#2d0029",
+          "color_text": "#ffffff",
+          "color_button": "#ff00cc",
+          "show_waveform_decoration": true
+        },
+        "about": {
+          "enabled": true,
+          "title": "About Me xD",
+          "source": "x_bio",
+          "box_style": "bordered",
+          "show_top_posts": true,
+          "top_posts_count": 3,
+          "show_interests": true
+        },
+        "top8": {
+          "enabled": true,
+          "title": "My Drops ✨",
+          "count": 8,
+          "grid_cols": "4",
+          "card_style": "polaroid",
+          "card_hover": "shake",
+          "show_product_name": true,
+          "show_price": true,
+          "label_style": "sticker"
+        },
+        "products": {
+          "grid_cols_desktop": "3",
+          "grid_cols_mobile": "2",
+          "card_style": "raised",
+          "card_bg": "#2a0030",
+          "card_border_color": "#ff00cc",
+          "card_border_radius": "lg",
+          "image_aspect": "square",
+          "hover_effect": "border_glow",
+          "show_add_to_cart": true,
+          "add_to_cart_style": "pill",
+          "add_to_cart_color": "#ff00cc",
+          "add_to_cart_text": "Grab It ✨"
+        },
+        "decorations": {
+          "use_sparkle_dividers": true,
+          "use_animated_border": false,
+          "cursor_style": "star",
+          "show_blinkies": false,
+          "corner_decoration": "stars",
+          "section_divider_style": "stars",
+          "section_divider_color": "#ff00cc",
+          "glitter_text_on": ["username", "top8.title"],
+          "badge_style": "sticker"
+        },
+        "animation": {
+          "page_entrance": "fade_in",
+          "header_animation": "shimmer",
+          "product_card_entrance": "stagger_fade",
+          "reduced_motion_fallback": true
+        },
+        "mobile": {
+          "stack_order": ["header", "player", "top8", "products", "about"],
+          "sidebar_collapse": "accordion",
+          "touch_target_size": "comfortable"
+        }
+      }
+    },
+    {
+      "id": "bc_002",
+      "name": "Streetwear Drop",
+      "subculture": "skate",
+      "rating": 5,
+      "creator_x_handle": null,
+      "why_it_works": "Bebas Neue at tracking-widest in all-caps transforms any storefront into a streetwear drop page. White background with a single red accent makes products pop with zero distraction. The minimal player and line dividers keep the focus on the merch. Hard text shadow on headings reads like spray paint.",
+      "standout_variables": {
+        "colors.accent_primary": "#ff3300",
+        "colors.page_bg": "#f5f5f5",
+        "typography.font_heading": "Bebas Neue",
+        "typography.text_transform": "uppercase",
+        "typography.text_shadow": "hard",
+        "decorations.section_divider_style": "line",
+        "player.style": "minimal"
+      },
+      "full_config": {
+        "meta": {
+          "preset_name": "Streetwear Drop",
+          "subculture": "skate",
+          "generated_from": "named_preset",
+          "version": "1.0"
+        },
+        "layout": {
+          "structure": "two_col_left",
+          "sidebar_width": "narrow",
+          "content_density": "sparse",
+          "section_order": ["header", "products", "top8", "about", "player", "reviews"]
+        },
+        "background": {
+          "type": "solid",
+          "color_primary": "#f5f5f5",
+          "color_secondary": "#eeeeee",
+          "gradient_direction": null,
+          "pattern_style": null,
+          "pattern_opacity": 0.0
+        },
+        "colors": {
+          "page_bg": "#f5f5f5",
+          "sidebar_bg": "#eeeeee",
+          "content_bg": "#ffffff",
+          "card_bg": "#f0f0f0",
+          "border": "#222222",
+          "accent_primary": "#ff3300",
+          "accent_secondary": "#222222",
+          "text_body": "#222222",
+          "text_heading": "#000000",
+          "text_link": "#ff3300",
+          "text_link_hover": "#cc2200",
+          "scrollbar_track": "#eeeeee",
+          "scrollbar_thumb": "#222222"
+        },
+        "typography": {
+          "font_heading": "Bebas Neue",
+          "font_body": "Inter",
+          "font_accent": "Permanent Marker",
+          "heading_size": "text-5xl",
+          "body_size": "text-base",
+          "letter_spacing": "tracking-widest",
+          "text_transform": "uppercase",
+          "text_shadow": "hard"
+        },
+        "header": {
+          "layout": "banner_above",
+          "avatar_shape": "square",
+          "avatar_border_style": "solid",
+          "avatar_border_color": "#222222",
+          "avatar_size": "md",
+          "username_style": "outlined",
+          "show_follower_count": true,
+          "show_x_handle": true,
+          "show_mood": false,
+          "mood_icon": null,
+          "mood_text": null
+        },
+        "player": {
+          "enabled": true,
+          "type": "x_spaces_link",
+          "position": "sidebar_bottom",
+          "style": "minimal",
+          "label": "Drop",
+          "color_bg": "#eeeeee",
+          "color_text": "#222222",
+          "color_button": "#ff3300",
+          "show_waveform_decoration": false
+        },
+        "about": {
+          "enabled": true,
+          "title": "The Brand",
+          "source": "x_bio",
+          "box_style": "bordered",
+          "show_top_posts": false,
+          "top_posts_count": 3,
+          "show_interests": false
+        },
+        "top8": {
+          "enabled": true,
+          "title": "The Essentials",
+          "count": 8,
+          "grid_cols": "4",
+          "card_style": "flat",
+          "card_hover": "scale",
+          "show_product_name": true,
+          "show_price": true,
+          "label_style": "badge"
+        },
+        "products": {
+          "grid_cols_desktop": "3",
+          "grid_cols_mobile": "2",
+          "card_style": "bordered",
+          "card_bg": "#ffffff",
+          "card_border_color": "#222222",
+          "card_border_radius": "none",
+          "image_aspect": "square",
+          "hover_effect": "shadow",
+          "show_add_to_cart": true,
+          "add_to_cart_style": "square",
+          "add_to_cart_color": "#ff3300",
+          "add_to_cart_text": "Cop It"
+        },
+        "decorations": {
+          "use_sparkle_dividers": false,
+          "use_animated_border": false,
+          "cursor_style": "default",
+          "show_blinkies": false,
+          "corner_decoration": "none",
+          "section_divider_style": "line",
+          "section_divider_color": "#222222",
+          "glitter_text_on": [],
+          "badge_style": "minimal"
+        },
+        "animation": {
+          "page_entrance": "none",
+          "header_animation": "none",
+          "product_card_entrance": "pop_in",
+          "reduced_motion_fallback": true
+        },
+        "mobile": {
+          "stack_order": ["header", "top8", "products", "player", "about"],
+          "sidebar_collapse": "hide",
+          "touch_target_size": "comfortable"
+        }
+      }
+    },
+    {
+      "id": "bc_003",
+      "name": "Dark Romantic",
+      "subculture": "goth",
+      "rating": 5,
+      "creator_x_handle": null,
+      "why_it_works": "Cinzel Decorative with glow text shadow on a near-black background is the fastest way to signal dark romanticism without any imagery. Deep purple borders create a velvet feel. The retro_cassette player in this palette looks like something from a Victorian music box. Skull corner decorations seal the aesthetic.",
+      "standout_variables": {
+        "colors.accent_primary": "#9900aa",
+        "colors.page_bg": "#0a0008",
+        "typography.font_heading": "Cinzel Decorative",
+        "typography.text_shadow": "glow",
+        "decorations.corner_decoration": "skulls",
+        "player.style": "retro_cassette"
+      },
+      "full_config": {
+        "meta": {
+          "preset_name": "Dark Romantic",
+          "subculture": "goth",
+          "generated_from": "named_preset",
+          "version": "1.0"
+        },
+        "layout": {
+          "structure": "two_col_left",
+          "sidebar_width": "medium",
+          "content_density": "balanced",
+          "section_order": ["header", "player", "about", "top8", "products", "reviews"]
+        },
+        "background": {
+          "type": "solid",
+          "color_primary": "#0a0008",
+          "color_secondary": "#120010",
+          "gradient_direction": null,
+          "pattern_style": null,
+          "pattern_opacity": 0.0
+        },
+        "colors": {
+          "page_bg": "#0a0008",
+          "sidebar_bg": "#120010",
+          "content_bg": "#0f000d",
+          "card_bg": "#1a0018",
+          "border": "#5a0060",
+          "accent_primary": "#9900aa",
+          "accent_secondary": "#cc44cc",
+          "text_body": "#d4a0d4",
+          "text_heading": "#e8a8e8",
+          "text_link": "#cc44cc",
+          "text_link_hover": "#ff88ff",
+          "scrollbar_track": "#0a0008",
+          "scrollbar_thumb": "#5a0060"
+        },
+        "typography": {
+          "font_heading": "Cinzel Decorative",
+          "font_body": "IM Fell English",
+          "font_accent": "Cinzel",
+          "heading_size": "text-3xl",
+          "body_size": "text-base",
+          "letter_spacing": "tracking-wide",
+          "text_transform": "none",
+          "text_shadow": "glow"
+        },
+        "header": {
+          "layout": "banner_behind",
+          "avatar_shape": "rounded",
+          "avatar_border_style": "double",
+          "avatar_border_color": "#5a0060",
+          "avatar_size": "lg",
+          "username_style": "neon",
+          "show_follower_count": true,
+          "show_x_handle": true,
+          "show_mood": true,
+          "mood_icon": "🕯️",
+          "mood_text": "Darkly devoted"
+        },
+        "player": {
+          "enabled": true,
+          "type": "x_spaces_link",
+          "position": "sidebar_top",
+          "style": "retro_cassette",
+          "label": "Now Playing",
+          "color_bg": "#120010",
+          "color_text": "#d4a0d4",
+          "color_button": "#9900aa",
+          "show_waveform_decoration": true
+        },
+        "about": {
+          "enabled": true,
+          "title": "The Vibe",
+          "source": "x_bio",
+          "box_style": "glassy",
+          "show_top_posts": true,
+          "top_posts_count": 3,
+          "show_interests": true
+        },
+        "top8": {
+          "enabled": true,
+          "title": "The Essentials",
+          "count": 8,
+          "grid_cols": "4",
+          "card_style": "bordered",
+          "card_hover": "glow",
+          "show_product_name": true,
+          "show_price": true,
+          "label_style": "badge"
+        },
+        "products": {
+          "grid_cols_desktop": "3",
+          "grid_cols_mobile": "2",
+          "card_style": "raised",
+          "card_bg": "#1a0018",
+          "card_border_color": "#5a0060",
+          "card_border_radius": "sm",
+          "image_aspect": "square",
+          "hover_effect": "border_glow",
+          "show_add_to_cart": true,
+          "add_to_cart_style": "ghost",
+          "add_to_cart_color": "#9900aa",
+          "add_to_cart_text": "Add to Cart"
+        },
+        "decorations": {
+          "use_sparkle_dividers": false,
+          "use_animated_border": false,
+          "cursor_style": "crosshair",
+          "show_blinkies": false,
+          "corner_decoration": "skulls",
+          "section_divider_style": "line",
+          "section_divider_color": "#5a0060",
+          "glitter_text_on": [],
+          "badge_style": "pixel"
+        },
+        "animation": {
+          "page_entrance": "fade_in",
+          "header_animation": "pulse",
+          "product_card_entrance": "stagger_fade",
+          "reduced_motion_fallback": true
+        },
+        "mobile": {
+          "stack_order": ["header", "player", "top8", "products", "about"],
+          "sidebar_collapse": "accordion",
+          "touch_target_size": "comfortable"
+        }
+      }
+    }
+  ]
+}
