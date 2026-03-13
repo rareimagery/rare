@@ -56,3 +56,27 @@ rareimagery_xstore.dashboard_catchall:
   requirements:
     _permission: 'manage own x store'
     path: '.+'
+
+rareimagery_xstore.invite_codes:
+  path: '/admin/config/rareimagery/invites'
+  defaults:
+    _form: '\Drupal\rareimagery_xstore\Form\InviteCodeForm'
+    _title: 'Invite Codes'
+  requirements:
+    _permission: 'administer x creator stores'
+
+rareimagery_xstore.invite_disable:
+  path: '/admin/config/rareimagery/invites/disable/{nid}'
+  defaults:
+    _controller: '\Drupal\rareimagery_xstore\Controller\InviteCodeController::disable'
+  requirements:
+    _permission: 'administer x creator stores'
+    nid: '\d+'
+
+rareimagery_xstore.invite_enable:
+  path: '/admin/config/rareimagery/invites/enable/{nid}'
+  defaults:
+    _controller: '\Drupal\rareimagery_xstore\Controller\InviteCodeController::enable'
+  requirements:
+    _permission: 'administer x creator stores'
+    nid: '\d+'

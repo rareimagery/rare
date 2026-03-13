@@ -11,3 +11,10 @@ rareimagery_xstore.xai_settings:
   description: 'Configure xAI (Grok) API keys, model, and AI feature toggles.'
   route_name: rareimagery_xstore.xai_settings
   weight: 11
+
+rareimagery_xstore.invite_codes:
+  title: 'Invite Codes'
+  parent: system.admin_config
+  description: 'Generate and manage invite codes for new creators.'
+  route_name: rareimagery_xstore.invite_codes
+  weight: 12
