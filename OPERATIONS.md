@@ -216,8 +216,11 @@ DRUPAL_API_PASS=
 
 # APIs
 XAI_API_KEY=
-X_CONSUMER_KEY=
+X_CONSUMER_KEY=            # Drupal/backend integrations
 X_CONSUMER_SECRET=
+X_CLIENT_ID=               # NextAuth X OAuth 2.0 login
+X_CLIENT_SECRET=
+X_API_BEARER_TOKEN=
 ANTHROPIC_API_KEY=
 STRIPE_SECRET_KEY=
 STRIPE_PUBLISHABLE_KEY=
@@ -227,7 +230,7 @@ PRINTFUL_API_KEY=
 # Frontend (.env.local)
 NEXTAUTH_SECRET=
 NEXTAUTH_URL=https://rareimagery.net
-DRUPAL_BASE_URL=http://72.62.80.155
+DRUPAL_API_URL=http://72.62.80.155
 ```
 
 ---

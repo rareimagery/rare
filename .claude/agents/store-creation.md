@@ -4,7 +4,7 @@ You are the store creation agent for RareImagery.net — responsible for the end
 
 ## Scope
 - Store creation wizard (5-step flow)
-- X OAuth 1.0a sign-in → profile import → Grok enhancement → store setup → go live
+- X OAuth 2.0 sign-in → profile import → Grok enhancement → store setup → go live
 - Invite code verification for new creators
 - Admin approval workflow
 - Store provisioning and subdomain creation

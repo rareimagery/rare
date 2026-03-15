@@ -124,7 +124,7 @@ export async function DELETE(req: NextRequest) {
 ## 3. Drupal Builds Helper — `/lib/drupalBuilds.ts`
 
 ```ts
-const DRUPAL_BASE = process.env.DRUPAL_BASE_URL
+const DRUPAL_BASE = process.env.DRUPAL_API_URL
 const SERVICE_TOKEN = process.env.DRUPAL_SERVICE_TOKEN // server-to-server token
 
 export async function getBuilds(storeId: string): Promise<Build[]> {
@@ -552,7 +552,7 @@ export default function LivePreview({ code }: { code: string }) {
 
 ```env
 ANTHROPIC_API_KEY=sk-ant-...
-DRUPAL_BASE_URL=https://api.rareimagery.net
+DRUPAL_API_URL=https://api.rareimagery.net
 DRUPAL_SERVICE_TOKEN=your-server-to-server-oauth-token
 ```
 

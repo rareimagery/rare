@@ -5,7 +5,7 @@
 - **One-time Setup Fee**: $5  
   (covers store creation, “Sign in with X” verification, Grok auto-import of PFP/banner/top 8 posts/top 8 followers, and first theme selection)
 
-- **Monthly Upkeep**: $3  
+- **Monthly Upkeep**: $6  
   (your own subdomain `yourname.rareimagery.net`, hosting, Grok updates, security, backups)
 
 - **Per-Purchase Processing Fee**: **2.9% + $0.30**  
@@ -17,15 +17,15 @@ You charge the creator an extra **$1.75** ($50 × 2.9% + $0.30).
 Creator still makes great money, you make money on volume.
 
 ### How Creators Pay
-- $5 setup + first month ($8 total) charged when they create their store  
-- $3/month auto-billed via Drupal Commerce subscription  
+- $5 setup + first month ($11 total) charged when they create their store  
+- $6/month auto-billed via Drupal Commerce subscription  
 - 2.9% + $0.30 auto-added to every order (no extra work)
 
 Grok even writes the perfect “Why this pricing is fair” message for your sellers.
 
 ### Next Steps (already built)
 - Pricing products created in Commerce  
-- Recurring $3/month subscription ready  
+- Recurring $6/month subscription ready  
 - 2.9% + $0.30 fee rule active  
 - Stripe integration coming next (one click)
 

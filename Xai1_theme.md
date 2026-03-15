@@ -289,7 +289,7 @@ export interface XPost {
 
 export async function fetchXProfile(username: string): Promise<XProfileData['drupal']> {
   const res = await fetch(
-    `${process.env.DRUPAL_BASE_URL}/jsonapi/user/user` +
+    `${process.env.DRUPAL_API_URL}/jsonapi/user/user` +
     `?filter[name]=${username}` +
     `&include=user_picture,field_store,field_store.field_images,` +
     `field_store.field_featured_products,field_store.field_featured_products.field_images` +
@@ -1160,7 +1160,7 @@ html[data-theme="dark"],
 # .env.local
 
 # Drupal
-DRUPAL_BASE_URL=https://cms.rareimagery.net
+DRUPAL_API_URL=https://cms.rareimagery.net
 DRUPAL_API_TOKEN=your_drupal_jwt_or_consumer_token
 
 # X API v2

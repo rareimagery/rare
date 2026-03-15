@@ -5,7 +5,7 @@ Live site: http://72.62.80.155
 ## X Authentication Method (Confirmed 2026)
 X provides two production-ready methods:
 1. **OAuth 2.0 Authorization Code Flow with PKCE** ← Recommended (modern, secure, “Sign in with X” button)
-2. OAuth 1.0a User Context (still fully supported)
+2. Legacy user-context auth exists, but this platform uses OAuth 2.0 only
 
 Scopes we’ll use: `users.read tweet.read follows.read offline.access` (so Grok can pull PFP, posts, followers).
 
@@ -13,8 +13,8 @@ Scopes we’ll use: `users.read tweet.read follows.read offline.access` (so Grok
 1. Go to https://developer.x.com → sign in with your X account  
 2. Developer Portal → Projects & Apps → Create Project  
 3. App name: “RareImagery Marketplace”  
-4. Set Callback URI: `http://72.62.80.155:8080/oauth/callback` (we’ll update to rareimagery.net later)  
-5. Enable OAuth 2.0 + OAuth 1.0a  
+4. Set Callback URI: `https://rareimagery.net/api/auth/callback/twitter`  
+5. Enable OAuth 2.0 (PKCE)  
 6. Copy: Client ID, Client Secret, and set “Sign in with X” permission to YES  
 7. Save.
 

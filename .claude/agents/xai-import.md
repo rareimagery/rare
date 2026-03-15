@@ -8,9 +8,9 @@ You are the X/Twitter data import agent for RareImagery.net — responsible for 
 - Profile sync to Drupal (profile pictures, banners, bios, followers, posts)
 
 ## Auth Context
-- The platform uses **OAuth 1.0a** for X login (Consumer Key + Consumer Secret)
-- OAuth tokens from login are `oauth_token` + `oauth_token_secret` (NOT OAuth 2.0 bearer tokens)
-- X API v2 calls for data import use the app's Bearer Token (separate from user OAuth)
+- The platform uses **OAuth 2.0** for X login via NextAuth
+- User login provides an OAuth 2.0 access token (`xAccessToken`) in the session
+- X API v2 calls for data import use either the user's OAuth 2.0 token or the app Bearer Token, depending on endpoint
 - xAI/Grok API uses `XAI_API_KEY` env var (from console.x.ai)
 
 ## Key Files
@@ -37,7 +37,7 @@ You are the X/Twitter data import agent for RareImagery.net — responsible for 
 
 ## Data Flow
 ```
-X OAuth 1.0a Login → NextAuth session (oauth_token, oauth_token_secret)
+X OAuth 2.0 Login → NextAuth session (xAccessToken, xId, xUsername)
      ↓
 /api/stores/enhance-profile (POST)
      ↓
@@ -75,6 +75,6 @@ interface GrokEnhancements {
 
 ## Environment Variables
 - `XAI_API_KEY` — xAI/Grok API key (from console.x.ai, server-side only)
-- `X_CLIENT_ID` — OAuth 1.0a Consumer Key (from developer.x.com)
-- `X_CLIENT_SECRET` — OAuth 1.0a Consumer Secret
-- User OAuth tokens come from NextAuth session (per-user, 1.0a format)
+- `X_CLIENT_ID` — OAuth 2.0 client ID (from developer.x.com)
+- `X_CLIENT_SECRET` — OAuth 2.0 client secret
+- User OAuth tokens come from NextAuth session (`xAccessToken`)

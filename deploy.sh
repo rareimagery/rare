@@ -30,7 +30,6 @@ echo "[2/6] Configuring firewall..."
 sudo ufw allow 22/tcp
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
-sudo ufw allow 8080/tcp
 sudo ufw --force enable
 
 # 3. Clone repo
@@ -62,6 +61,11 @@ else
   echo "[4/6] .env already exists, skipping..."
 fi
 
+# Load env for display values below
+set -a
+source .env
+set +a
+
 # 5. Start containers
 echo "[5/6] Starting containers..."
 $USE_SUDO docker compose up -d
@@ -72,16 +76,17 @@ sleep 15
 
 if $USE_SUDO docker compose ps | grep -q "Up"; then
   SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
+  DRUPAL_HTTP_PORT=${DRUPAL_PORT:-80}
   echo ""
   echo "============================================"
   echo "  Deploy complete!"
   echo "============================================"
   echo ""
-  echo "  Drupal:   http://$SERVER_IP:8080"
+  echo "  Drupal:   http://$SERVER_IP:$DRUPAL_HTTP_PORT"
   echo "  Postgres: $SERVER_IP:5432"
   echo ""
   echo "  Next steps:"
-  echo "  1. Open http://$SERVER_IP:8080 in browser"
+  echo "  1. Open http://$SERVER_IP:$DRUPAL_HTTP_PORT in browser"
   echo "  2. Run the Drupal installer"
   echo "     - DB type: PostgreSQL"
   echo "     - DB name: rare_drupal"

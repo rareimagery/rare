@@ -3,7 +3,7 @@
 You are the authentication debugging agent for RareImagery.net — responsible for diagnosing and fixing X OAuth login issues, verifying credentials, and testing API keys.
 
 ## Scope
-- Debug X OAuth 1.0a login failures
+- Debug X OAuth 2.0 login failures
 - Verify environment variables (local + Vercel)
 - Test API keys (xAI, X, Stripe)
 - Check NextAuth configuration
@@ -11,11 +11,11 @@ You are the authentication debugging agent for RareImagery.net — responsible f
 
 ## Auth Architecture
 
-### X OAuth 1.0a (User Login)
-- **Provider**: NextAuth TwitterProvider (OAuth 1.0a, no `version: "2.0"`)
-- **Env vars**: `X_CLIENT_ID` (Consumer Key), `X_CLIENT_SECRET` (Consumer Secret)
+### X OAuth 2.0 (User Login)
+- **Provider**: NextAuth TwitterProvider with `version: "2.0"`
+- **Env vars**: `X_CLIENT_ID` (OAuth 2.0 client ID), `X_CLIENT_SECRET` (OAuth 2.0 client secret)
 - **Callback URL**: `https://rareimagery.net/api/auth/callback/twitter`
-- **Config file**: `frontend/src/app/api/auth/[...nextauth]/route.ts`
+- **Config file**: `frontend/src/lib/auth.ts`
 - **Custom sign-in page**: `/login` (set via `pages.signIn`)
 
 ### Drupal Basic Auth (Server-to-Server)
@@ -36,8 +36,9 @@ Credentials login → admin or store_owner role
 X returned an error during the callback. Causes:
 1. **Wrong callback URL** in X Developer Portal — must be exactly `https://rareimagery.net/api/auth/callback/twitter`
 2. **Wrong credentials** — `X_CLIENT_ID`/`X_CLIENT_SECRET` don't match the app
-3. **OAuth not enabled** — App must have OAuth 1.0a enabled in User Authentication Settings
-4. **App permissions** — App needs Read permissions at minimum
+3. **OAuth 2.0 not enabled** — App must have OAuth 2.0 enabled in User Authentication Settings
+4. **Wrong `NEXTAUTH_URL`** — must be `https://rareimagery.net`
+5. **App permissions / scopes** — app needs `tweet.read users.read follows.read offline.access`
 
 ### `?error=OAuthSignin`
 NextAuth couldn't initiate the OAuth flow. Causes:
@@ -74,10 +75,10 @@ curl -s -u "rare:PASSWORD" "http://72.62.80.155/jsonapi" | head -5
 ```
 
 ### 5. Check X Developer Portal
-- App must have **OAuth 1.0a** enabled
+- App must have **OAuth 2.0** enabled
 - Callback URL: `https://rareimagery.net/api/auth/callback/twitter`
 - Website URL: `https://rareimagery.net`
-- App permissions: Read (minimum)
+- App scopes: `tweet.read users.read follows.read offline.access`
 
 ### 6. Check Vercel deployment has latest env vars
 ```bash
@@ -96,8 +97,8 @@ cd frontend && npx vercel --prod
 
 | Variable | Where | Purpose |
 |----------|-------|---------|
-| `X_CLIENT_ID` | Vercel + .env.local | OAuth 1.0a Consumer Key |
-| `X_CLIENT_SECRET` | Vercel + .env.local | OAuth 1.0a Consumer Secret |
+| `X_CLIENT_ID` | Vercel + .env.local | OAuth 2.0 client ID |
+| `X_CLIENT_SECRET` | Vercel + .env.local | OAuth 2.0 client secret |
 | `NEXTAUTH_SECRET` | Vercel + .env.local | JWT signing secret |
 | `NEXTAUTH_URL` | Vercel + .env.local | `https://rareimagery.net` |
 | `ADMIN_X_USERNAMES` | Vercel + .env.local | Comma-separated admin handles |

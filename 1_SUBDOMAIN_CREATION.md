@@ -42,7 +42,6 @@ In your Vercel project → **Settings → Domains**, add:
 ```
 rareimagery.net
 *.rareimagery.net
-console.rareimagery.net
 ```
 
 Vercel verifies these via the Cloudflare CNAME records above.

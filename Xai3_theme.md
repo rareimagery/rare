@@ -73,7 +73,7 @@ import { useState } from 'react'
 
 // ─── Drupal fetch helpers ──────────────────────────────────────────────────
 
-const BASE = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL
+const BASE = process.env.DRUPAL_API_URL
 
 async function fetchSubscriber(handle) {
   const url = `${BASE}/jsonapi/node/subscriber_store?filter[field_x_username]=${handle}&include=field_x_pfp,field_x_banner`

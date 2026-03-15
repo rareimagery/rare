@@ -1,14 +1,14 @@
 # Store Management Console – RareImagery X Marketplace
-### Next.js Admin Console at `console.rareimagery.net`
+### Next.js Admin Console at `rareimagery.net/console`
 
 ---
 
 ## Overview
 
-The console is the internal tool for creating and managing all creator stores. It lives at `console.rareimagery.net`, is protected by authentication, and is the only place stores can be provisioned.
+The console is the internal tool for creating and managing all creator stores. It lives under `rareimagery.net/console`, is protected by authentication, and is the only place stores can be provisioned.
 
 ```
-console.rareimagery.net
+rareimagery.net
 ├── /login                    ← Auth
 ├── /console/stores           ← All stores dashboard
 ├── /console/stores/new       ← Create new store
@@ -426,7 +426,7 @@ export default async function StoreDetailPage({
 CONSOLE_ADMIN_EMAIL=admin@rareimagery.net
 CONSOLE_ADMIN_PASSWORD=your_secure_password_here
 NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
-NEXTAUTH_URL=https://console.rareimagery.net
+NEXTAUTH_URL=https://rareimagery.net
 
 # Shared with storefront
 DRUPAL_API_URL=https://api.rareimagery.net

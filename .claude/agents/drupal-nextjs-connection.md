@@ -48,11 +48,11 @@ You are the integration agent responsible for the data pipeline between the Drup
 - Frontend uses NextAuth (X OAuth) for user sessions
 - Server-side API routes use Basic Auth to talk to Drupal: `drupalAuthHeaders()`
 - Drupal has custom `jsonapi_basic_auth` module at `/opt/drupal/web/modules/custom/jsonapi_basic_auth/`
-- Env vars: DRUPAL_API_USER, DRUPAL_API_PASS, DRUPAL_BASE_URL
+- Env vars: DRUPAL_API_USER, DRUPAL_API_PASS, DRUPAL_API_URL
 
 ## Drupal API Base
-- Production: `http://72.62.80.155` (DRUPAL_BASE_URL)
-- JSON:API endpoint: `{DRUPAL_BASE_URL}/jsonapi/`
+- Production: `http://72.62.80.155` when `DRUPAL_API_URL` is not overridden
+- JSON:API endpoint: `{DRUPAL_API_URL}/jsonapi/`
 - Content type: `node--creator_x_profile`
 
 ## Data Flow
