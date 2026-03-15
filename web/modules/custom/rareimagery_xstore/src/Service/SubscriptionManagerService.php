@@ -99,7 +99,10 @@ class SubscriptionManagerService {
    */
   public function handleWebhookEvent(string $payload, string $sigHeader): void {
     $settings = $this->getSubscriptionSettings();
-    $webhookSecret = $settings['webhook_signing_secret'];
+    $webhookSecret = $settings['webhook_signing_secret'] ?? '';
+    if (empty($webhookSecret)) {
+      $webhookSecret = getenv('STRIPE_WEBHOOK_SECRET') ?: '';
+    }
 
     if (empty($webhookSecret)) {
       throw new \RuntimeException('Subscription webhook secret not configured.');

@@ -38,6 +38,14 @@ class PrintfulWebhookController extends ControllerBase {
    * Processes a Printful webhook request.
    */
   public function handle(Request $request): JsonResponse {
+    $webhookSecret = getenv('PRINTFUL_WEBHOOK_SECRET');
+    if (!empty($webhookSecret)) {
+      $signature = $request->headers->get('X-Printful-Signature', '');
+      if (empty($signature) || !hash_equals($webhookSecret, $signature)) {
+        return new JsonResponse(['error' => 'Invalid signature'], 403);
+      }
+    }
+
     $payload = json_decode($request->getContent(), TRUE);
 
     if (!$payload || empty($payload['type'])) {

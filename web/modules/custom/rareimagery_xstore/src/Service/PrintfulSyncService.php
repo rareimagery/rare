@@ -58,7 +58,9 @@ class PrintfulSyncService {
    * Builds authorization headers for Printful API.
    */
   protected function getRequestOptions(?string $store_api_key = NULL): array {
-    $api_key = $store_api_key ?: $this->configFactory->get('rareimagery_xstore.settings')->get('printful.api_key');
+    $api_key = $store_api_key
+      ?: $this->configFactory->get('rareimagery_xstore.settings')->get('printful.api_key')
+      ?: getenv('PRINTFUL_API_KEY');
     return [
       'headers' => [
         'Authorization' => 'Bearer ' . $api_key,
