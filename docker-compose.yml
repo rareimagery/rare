@@ -24,6 +24,9 @@ services:
     environment:
       - APACHE_RUN_USER=www-data
       - APACHE_RUN_GROUP=www-data
+      - POSTGRES_DB=${POSTGRES_DB:-rare_drupal}
+      - POSTGRES_USER=${POSTGRES_USER:-rare_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
       - XAI_API_KEY=${XAI_API_KEY}
       - X_CONSUMER_KEY=${X_CONSUMER_KEY}
       - X_CONSUMER_SECRET=${X_CONSUMER_SECRET}

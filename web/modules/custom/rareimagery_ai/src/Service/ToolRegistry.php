@@ -603,7 +603,7 @@ class ToolRegistry {
 
     $results = [];
     foreach ($query->execute() as $row) {
-      $variables = $row->variables ? @unserialize($row->variables) : [];
+      $variables = $row->variables ? @unserialize($row->variables, ['allowed_classes' => FALSE]) : [];
       $message = is_array($variables) ? strtr($row->message, $variables) : $row->message;
       $results[] = [
         'id' => $row->wid,

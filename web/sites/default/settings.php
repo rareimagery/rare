@@ -898,9 +898,9 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $databases['default']['default'] = array (
-  'database' => 'rare_drupal',
-  'username' => 'rare_user',
-  'password' => '9F5qdKjCzdHhPdbiWKTzUv#QeMvQ7kc5',
+  'database' => getenv('POSTGRES_DB') ?: 'rare_drupal',
+  'username' => getenv('POSTGRES_USER') ?: 'rare_user',
+  'password' => getenv('POSTGRES_PASSWORD') ?: '',
   'prefix' => '',
   'host' => 'postgres',
   'port' => '5432',

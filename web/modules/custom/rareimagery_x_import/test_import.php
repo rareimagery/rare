@@ -10,6 +10,49 @@ $grok = \Drupal::service('rareimagery_x_import.grok');
 
 $usernames = ['elonmusk', 'alphafox', 'clownworld', 'doctorclownphd', 'ksjcreative'];
 
+$mock_profiles = [
+  'elonmusk' => [
+    'name' => 'Elon Musk',
+    'bio' => 'CEO of Tesla, SpaceX, xAI. Technoking.',
+    'followers' => 195000000,
+    'metrics' => ['engagement_rate' => 0.08, 'avg_likes' => 250000],
+    'top_posts' => [['text' => 'The future is electric', 'likes' => 500000]],
+    'followers_sample' => [['username' => 'jack', 'name' => 'Jack']],
+  ],
+  'alphafox' => [
+    'name' => 'Alpha Fox',
+    'bio' => 'Epic pranks & outdoor adventures.',
+    'followers' => 2400000,
+    'metrics' => ['engagement_rate' => 0.12, 'avg_likes' => 45000],
+    'top_posts' => [['text' => 'New prank video just dropped', 'likes' => 80000]],
+    'followers_sample' => [],
+  ],
+  'clownworld' => [
+    'name' => 'Clown World',
+    'bio' => 'Honk honk. Political satire & memes.',
+    'followers' => 850000,
+    'metrics' => ['engagement_rate' => 0.15, 'avg_likes' => 30000],
+    'top_posts' => [['text' => 'The circus never ends', 'likes' => 60000]],
+    'followers_sample' => [],
+  ],
+  'doctorclownphd' => [
+    'name' => 'Doctor Clown PhD',
+    'bio' => 'Certified clown doctor. Laughter is medicine.',
+    'followers' => 320000,
+    'metrics' => ['engagement_rate' => 0.10, 'avg_likes' => 8000],
+    'top_posts' => [['text' => 'Prescription: more honking', 'likes' => 15000]],
+    'followers_sample' => [],
+  ],
+  'ksjcreative' => [
+    'name' => 'KSJ Creative',
+    'bio' => 'Digital agency. Design, code, innovate.',
+    'followers' => 45000,
+    'metrics' => ['engagement_rate' => 0.06, 'avg_likes' => 1200],
+    'top_posts' => [['text' => 'New project launch', 'likes' => 3000]],
+    'followers_sample' => [],
+  ],
+];
+
 echo "=== Creating 5 Demo Creator X Profiles + Stores + Products ===\n\n";
 
 $fake_products = [
@@ -91,117 +134,3 @@ foreach ($usernames as $username) {
 
 echo "\n=== FULL BUILD COMPLETE: 5 Profiles + Stores + Products ===\n";
 echo "Test: /stores/elonmusk (add products to cart!)\n";
-
-// If we got a real profile, continue with live data
-echo "   Name: " . $profile['name'] . "\n";
-echo "   Bio: " . ($profile['description'] ?? 'N/A') . "\n";
-echo "   Followers: " . ($profile['public_metrics']['followers_count'] ?? 'N/A') . "\n";
-$user_id = $profile['id'];
-
-echo "\n2. Fetching tweets...\n";
-$tweets = $x_api->getUserTweets($user_id, 20);
-echo "   Got " . count($tweets) . " tweets\n";
-
-echo "\n3. Fetching followers...\n";
-$followers = $x_api->getUserFollowers($user_id, 8);
-echo "   Got " . count($followers) . " followers\n";
-
-$xai_key = getenv('XAI_API_KEY');
-$grok_analysis = NULL;
-if ($xai_key && $xai_key !== 'your_xai_key_here' && !empty($tweets)) {
-  echo "\n4. Running Grok analysis...\n";
-  $grok_analysis = $grok->analyzeProfile($profile, $tweets);
-  if ($grok_analysis) {
-    echo "   Engagement score: " . ($grok_analysis['engagement_score'] ?? 'N/A') . "\n";
-    echo "   Audience quality: " . ($grok_analysis['audience_quality'] ?? 'N/A') . "\n";
-  }
-  else {
-    echo "   Grok analysis returned null\n";
-  }
-}
-else {
-  echo "\n4. Skipping Grok (no valid XAI_API_KEY)\n";
-}
-
-// Download PFP
-$pfp_file = NULL;
-$pfp_url = str_replace('_normal', '_400x400', $profile['profile_image_url'] ?? '');
-if (!empty($pfp_url)) {
-  try {
-    $response = \Drupal::httpClient()->request('GET', $pfp_url, ['timeout' => 15]);
-    $data = $response->getBody()->getContents();
-    $dir = 'public://creator-pfps';
-    \Drupal::service('file_system')->prepareDirectory($dir, \Drupal\Core\File\FileSystemInterface::CREATE_DIRECTORY);
-    $pfp_file = \Drupal::service('file.repository')->writeData($data, $dir . '/' . $username . '-pfp.jpg', \Drupal\Core\File\FileSystemInterface::EXISTS_REPLACE);
-    echo "\n5. PFP downloaded\n";
-  }
-  catch (\Exception $e) {
-    echo "\n5. PFP download failed: " . $e->getMessage() . "\n";
-  }
-}
-
-// Build top posts
-$top_posts = [];
-if (!empty($grok_analysis['top_posts'])) {
-  foreach (array_slice($grok_analysis['top_posts'], 0, 8) as $post) {
-    $top_posts[] = ['value' => json_encode($post)];
-  }
-}
-elseif (!empty($tweets)) {
-  usort($tweets, function ($a, $b) {
-    $sa = ($a['public_metrics']['like_count'] ?? 0) + ($a['public_metrics']['retweet_count'] ?? 0) * 2;
-    $sb = ($b['public_metrics']['like_count'] ?? 0) + ($b['public_metrics']['retweet_count'] ?? 0) * 2;
-    return $sb - $sa;
-  });
-  foreach (array_slice($tweets, 0, 8) as $tweet) {
-    $top_posts[] = ['value' => json_encode([
-      'text' => $tweet['text'],
-      'likes' => $tweet['public_metrics']['like_count'] ?? 0,
-      'retweets' => $tweet['public_metrics']['retweet_count'] ?? 0,
-    ])];
-  }
-}
-
-// Build followers
-$top_followers = [];
-foreach (array_slice($followers, 0, 8) as $f) {
-  $top_followers[] = ['value' => json_encode([
-    'username' => $f['username'],
-    'name' => $f['name'],
-    'avatar' => $f['profile_image_url'] ?? '',
-    'followers' => $f['public_metrics']['followers_count'] ?? 0,
-  ])];
-}
-
-// Create node
-$node_data = [
-  'type' => 'creator_x_profile',
-  'title' => ($profile['name'] ?? $username) . ' - X Profile',
-  'status' => 1,
-  'field_x_username' => $username,
-  'field_bio_description' => [
-    'value' => '<p>' . htmlspecialchars($profile['description'] ?? '') . '</p>',
-    'format' => 'basic_html',
-  ],
-  'field_follower_count' => $profile['public_metrics']['followers_count'] ?? 0,
-];
-
-if ($pfp_file) {
-  $node_data['field_profile_picture'] = ['target_id' => $pfp_file->id(), 'alt' => $username . ' profile picture'];
-}
-if (!empty($top_posts)) {
-  $node_data['field_top_posts'] = $top_posts;
-}
-if (!empty($top_followers)) {
-  $node_data['field_top_followers'] = $top_followers;
-}
-if (!empty($grok_analysis)) {
-  $node_data['field_metrics'] = ['value' => json_encode($grok_analysis)];
-}
-
-$node = \Drupal::entityTypeManager()->getStorage('node')->create($node_data);
-$node->save();
-
-echo "\n=== SUCCESS ===\n";
-echo "Creator X Profile created! Node ID: " . $node->id() . "\n";
-echo "View at: /node/" . $node->id() . "\n";
