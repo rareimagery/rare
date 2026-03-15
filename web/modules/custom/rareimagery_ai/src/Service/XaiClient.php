@@ -4,7 +4,8 @@ namespace Drupal\rareimagery_ai\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * xAI/Grok API client with tool-use support (OpenAI-compatible).
@@ -13,16 +14,19 @@ class XaiClient {
 
   protected ConfigFactoryInterface $configFactory;
   protected ToolRegistry $toolRegistry;
+  protected ClientInterface $httpClient;
   protected $logger;
 
   public function __construct(
     ConfigFactoryInterface $config_factory,
     ToolRegistry $tool_registry,
     LoggerChannelFactoryInterface $logger_factory,
+    ClientInterface $http_client,
   ) {
     $this->configFactory = $config_factory;
     $this->toolRegistry = $tool_registry;
     $this->logger = $logger_factory->get('rareimagery_ai');
+    $this->httpClient = $http_client;
   }
 
   /**
@@ -31,10 +35,12 @@ class XaiClient {
   public function chat(string $user_message, array $conversation = []): array {
     $config = $this->configFactory->get('rareimagery_ai.settings');
     $xai_config = $this->configFactory->get('rareimagery_xstore.settings');
-    $api_key = $config->get('xai.api_key') ?: $xai_config->get('xai.api_key');
+    $api_key = $config->get('xai.api_key')
+      ?: $xai_config->get('xai.api_key')
+      ?: getenv('XAI_API_KEY');
 
     if (empty($api_key)) {
-      return ['error' => 'xAI API key is not configured.'];
+      return ['error' => 'xAI API key is not configured. Set it in admin settings or the XAI_API_KEY environment variable.'];
     }
 
     $model = $config->get('xai.model') ?: 'grok-3-fast';
@@ -61,7 +67,6 @@ class XaiClient {
     }
     $messages[] = ['role' => 'user', 'content' => $user_message];
 
-    $client = new Client();
     $max_iterations = 10;
     $tool_results = [];
 
@@ -73,18 +78,42 @@ class XaiClient {
         'tool_choice' => 'auto',
       ];
 
-      $response = $client->post('https://api.x.ai/v1/chat/completions', [
-        'headers' => [
-          'Authorization' => 'Bearer ' . $api_key,
-          'Content-Type' => 'application/json',
-        ],
-        'json' => $payload,
-        'timeout' => 120,
-      ]);
+      try {
+        $response = $this->httpClient->request('POST', 'https://api.x.ai/v1/chat/completions', [
+          'headers' => [
+            'Authorization' => 'Bearer ' . $api_key,
+            'Content-Type' => 'application/json',
+          ],
+          'json' => $payload,
+          'timeout' => 120,
+        ]);
 
-      $result = json_decode($response->getBody()->getContents(), TRUE);
-      $choice = $result['choices'][0] ?? [];
-      $assistant_message = $choice['message'] ?? [];
+        $result = json_decode($response->getBody()->getContents(), TRUE);
+      }
+      catch (RequestException $e) {
+        $this->logger->error('xAI API request failed: @error', ['@error' => $e->getMessage()]);
+        return [
+          'error' => 'xAI API request failed: ' . $e->getMessage(),
+          'tool_results' => $tool_results,
+          'provider' => 'xai',
+          'model' => $model,
+        ];
+      }
+
+      if (empty($result['choices'][0]['message'])) {
+        $this->logger->error('xAI API returned unexpected response: @response', [
+          '@response' => json_encode($result),
+        ]);
+        return [
+          'error' => 'xAI API returned an unexpected response.',
+          'tool_results' => $tool_results,
+          'provider' => 'xai',
+          'model' => $model,
+        ];
+      }
+
+      $choice = $result['choices'][0];
+      $assistant_message = $choice['message'];
       $finish_reason = $choice['finish_reason'] ?? 'stop';
 
       $messages[] = $assistant_message;

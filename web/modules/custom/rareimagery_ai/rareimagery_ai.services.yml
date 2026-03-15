@@ -14,6 +14,7 @@ services:
       - '@config.factory'
       - '@rareimagery_ai.tool_registry'
       - '@logger.factory'
+      - '@http_client'
 
   rareimagery_ai.xai_client:
     class: Drupal\rareimagery_ai\Service\XaiClient
@@ -21,6 +22,7 @@ services:
       - '@config.factory'
       - '@rareimagery_ai.tool_registry'
       - '@logger.factory'
+      - '@http_client'
 
   rareimagery_ai.agent:
     class: Drupal\rareimagery_ai\Service\AiAgent

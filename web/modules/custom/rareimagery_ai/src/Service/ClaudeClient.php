@@ -4,7 +4,8 @@ namespace Drupal\rareimagery_ai\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Claude API client with tool-use support.
@@ -13,16 +14,19 @@ class ClaudeClient {
 
   protected ConfigFactoryInterface $configFactory;
   protected ToolRegistry $toolRegistry;
+  protected ClientInterface $httpClient;
   protected $logger;
 
   public function __construct(
     ConfigFactoryInterface $config_factory,
     ToolRegistry $tool_registry,
     LoggerChannelFactoryInterface $logger_factory,
+    ClientInterface $http_client,
   ) {
     $this->configFactory = $config_factory;
     $this->toolRegistry = $tool_registry;
     $this->logger = $logger_factory->get('rareimagery_ai');
+    $this->httpClient = $http_client;
   }
 
   /**
@@ -50,7 +54,6 @@ class ClaudeClient {
     $messages = $conversation;
     $messages[] = ['role' => 'user', 'content' => $user_message];
 
-    $client = new Client();
     $max_iterations = 10;
     $tool_results = [];
 
@@ -63,17 +66,41 @@ class ClaudeClient {
         'messages' => $messages,
       ];
 
-      $response = $client->post('https://api.anthropic.com/v1/messages', [
-        'headers' => [
-          'x-api-key' => $api_key,
-          'anthropic-version' => '2023-06-01',
-          'content-type' => 'application/json',
-        ],
-        'json' => $payload,
-        'timeout' => 120,
-      ]);
+      try {
+        $response = $this->httpClient->request('POST', 'https://api.anthropic.com/v1/messages', [
+          'headers' => [
+            'x-api-key' => $api_key,
+            'anthropic-version' => '2023-06-01',
+            'content-type' => 'application/json',
+          ],
+          'json' => $payload,
+          'timeout' => 120,
+        ]);
 
-      $result = json_decode($response->getBody()->getContents(), TRUE);
+        $result = json_decode($response->getBody()->getContents(), TRUE);
+      }
+      catch (RequestException $e) {
+        $this->logger->error('Claude API request failed: @error', ['@error' => $e->getMessage()]);
+        return [
+          'error' => 'Claude API request failed: ' . $e->getMessage(),
+          'tool_results' => $tool_results,
+          'provider' => 'claude',
+          'model' => $model,
+        ];
+      }
+
+      if (empty($result['content'])) {
+        $this->logger->error('Claude API returned unexpected response: @response', [
+          '@response' => json_encode($result),
+        ]);
+        return [
+          'error' => $result['error']['message'] ?? 'Claude API returned an unexpected response.',
+          'tool_results' => $tool_results,
+          'provider' => 'claude',
+          'model' => $model,
+        ];
+      }
+
       $stop_reason = $result['stop_reason'] ?? 'end_turn';
 
       // Add assistant message to conversation.
