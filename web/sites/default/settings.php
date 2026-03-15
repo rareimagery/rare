@@ -773,7 +773,12 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  *
  * @see https://www.drupal.org/docs/installing-drupal/trusted-host-settings
  */
-# $settings['trusted_host_patterns'] = [];
+$settings['trusted_host_patterns'] = [
+  '^rareimagery\.net$',
+  '^.+\.rareimagery\.net$',
+  '^72\.62\.80\.155$',
+  '^localhost$',
+];
 
 /**
  * The default list of directories that will be ignored by Drupal's file API.
@@ -895,7 +900,7 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 $databases['default']['default'] = array (
   'database' => 'rare_drupal',
   'username' => 'rare_user',
-  'password' => 'rare_pass_2026',
+  'password' => '9F5qdKjCzdHhPdbiWKTzUv#QeMvQ7kc5',
   'prefix' => '',
   'host' => 'postgres',
   'port' => '5432',
