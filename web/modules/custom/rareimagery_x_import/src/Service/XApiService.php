@@ -29,7 +29,11 @@ class XApiService {
     $config = $this->configFactory->get('rareimagery_x_import.settings');
     $token = $config->get('x_api_bearer_token');
     if (empty($token)) {
-      // Fall back to environment variable.
+      // Try direct Bearer Token env var first (from X Developer Portal).
+      $token = getenv('X_BEARER_TOKEN') ?: '';
+    }
+    if (empty($token)) {
+      // Fall back to OAuth2 client credentials flow.
       $key = getenv('X_CONSUMER_KEY');
       $secret = getenv('X_CONSUMER_SECRET');
       if ($key && $secret) {
@@ -70,35 +74,92 @@ class XApiService {
 
   /**
    * Fetch X user profile by username.
+   *
+   * Tries X API v2 first, falls back to fxtwitter public API.
    */
   public function getUserProfile(string $username): ?array {
     $token = $this->getBearerToken();
-    if (empty($token)) {
-      $this->logger->error('No X API Bearer token available.');
-      return NULL;
+
+    // Try X API v2 if we have a token.
+    if (!empty($token)) {
+      try {
+        $response = $this->httpClient->request('GET', 'https://api.x.com/2/users/by/username/' . urlencode($username), [
+          'headers' => [
+            'Authorization' => 'Bearer ' . $token,
+          ],
+          'query' => [
+            'user.fields' => 'name,description,profile_image_url,public_metrics,created_at',
+          ],
+          'timeout' => 15,
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), TRUE);
+        if (!empty($data['data'])) {
+          return $data['data'];
+        }
+
+        $this->logger->warning('No data returned from X API v2 for @username', ['@username' => $username]);
+      }
+      catch (RequestException $e) {
+        $this->logger->warning('X API v2 failed for @username, trying fxtwitter fallback: @error', [
+          '@username' => $username,
+          '@error' => $e->getMessage(),
+        ]);
+      }
     }
 
+    // Fallback: use fxtwitter public API (no auth required).
+    return $this->getUserProfileViaFxTwitter($username);
+  }
+
+  /**
+   * Fetches profile data via the public fxtwitter API as a fallback.
+   *
+   * Returns data in the same shape as X API v2 for compatibility.
+   */
+  protected function getUserProfileViaFxTwitter(string $username): ?array {
     try {
-      $response = $this->httpClient->request('GET', 'https://api.x.com/2/users/by/username/' . urlencode($username), [
+      $response = $this->httpClient->request('GET', 'https://api.fxtwitter.com/' . urlencode($username), [
         'headers' => [
-          'Authorization' => 'Bearer ' . $token,
+          'User-Agent' => 'Mozilla/5.0 (compatible; RareImagery/1.0)',
+          'Accept' => 'application/json',
         ],
-        'query' => [
-          'user.fields' => 'name,description,profile_image_url,public_metrics,created_at',
-        ],
-        'timeout' => 15,
+        'timeout' => 10,
+        'http_errors' => FALSE,
       ]);
 
-      $data = json_decode($response->getBody()->getContents(), TRUE);
-      if (!empty($data['data'])) {
-        return $data['data'];
+      $statusCode = $response->getStatusCode();
+      if ($statusCode !== 200) {
+        $this->logger->error('fxtwitter returned HTTP @code for @username', [
+          '@code' => $statusCode,
+          '@username' => $username,
+        ]);
+        return NULL;
       }
 
-      $this->logger->warning('No data returned for @username', ['@username' => $username]);
-      return NULL;
+      $data = json_decode($response->getBody()->getContents(), TRUE);
+      $user = $data['user'] ?? $data;
+
+      if (empty($user['name']) && empty($user['screen_name'])) {
+        return NULL;
+      }
+
+      // Map fxtwitter response to X API v2 shape.
+      return [
+        'id' => $user['id'] ?? $username,
+        'name' => $user['name'] ?? $username,
+        'username' => $user['screen_name'] ?? $username,
+        'description' => $user['description'] ?? '',
+        'profile_image_url' => $user['avatar_url'] ?? '',
+        'public_metrics' => [
+          'followers_count' => (int) ($user['followers'] ?? 0),
+          'following_count' => (int) ($user['following'] ?? 0),
+          'tweet_count' => (int) ($user['tweets'] ?? 0),
+        ],
+      ];
     }
     catch (RequestException $e) {
-      $this->logger->error('X API error for @username: @error', [
+      $this->logger->error('fxtwitter fallback failed for @username: @error', [
         '@username' => $username,
         '@error' => $e->getMessage(),
       ]);
