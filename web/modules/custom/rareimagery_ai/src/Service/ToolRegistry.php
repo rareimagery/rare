@@ -235,6 +235,79 @@ class ToolRegistry {
           'required' => ['module', 'action'],
         ],
       ],
+      // --- X / Creator-specific tools ---
+      [
+        'name' => 'list_creator_profiles',
+        'description' => 'List creator X profiles (creator_x_profile nodes) with X-specific fields like username, follower count, theme, and store link.',
+        'input_schema' => [
+          'type' => 'object',
+          'properties' => [
+            'theme' => ['type' => 'string', 'description' => 'Filter by store theme (xai3, minimal, neon, editorial, myspace).'],
+            'min_followers' => ['type' => 'integer', 'description' => 'Minimum follower count.'],
+            'has_store' => ['type' => 'boolean', 'description' => 'Only show profiles linked to a commerce store.'],
+            'limit' => ['type' => 'integer', 'description' => 'Max results. Default 25.'],
+          ],
+          'required' => [],
+        ],
+      ],
+      [
+        'name' => 'get_creator_profile',
+        'description' => 'Get full details of a creator X profile by X username. Returns decoded top posts, followers, metrics, bio, theme, and images.',
+        'input_schema' => [
+          'type' => 'object',
+          'properties' => [
+            'username' => ['type' => 'string', 'description' => 'X username (without @).'],
+          ],
+          'required' => ['username'],
+        ],
+      ],
+      [
+        'name' => 'list_commerce_stores_x',
+        'description' => 'List commerce stores with X-linked fields: store slug, theme, linked X profile, printful connection, follower/following counts.',
+        'input_schema' => [
+          'type' => 'object',
+          'properties' => [
+            'theme' => ['type' => 'string', 'description' => 'Filter by store theme.'],
+            'limit' => ['type' => 'integer', 'description' => 'Max results. Default 25.'],
+          ],
+          'required' => [],
+        ],
+      ],
+      [
+        'name' => 'list_shoutouts',
+        'description' => 'List shoutout nodes created by X webhooks. Shows status, sender X username, text, and source post.',
+        'input_schema' => [
+          'type' => 'object',
+          'properties' => [
+            'status' => ['type' => 'string', 'enum' => ['pending', 'approved', 'rejected', 'all'], 'description' => 'Filter by shoutout status.'],
+            'creator' => ['type' => 'string', 'description' => 'Filter by creator X username (the store owner receiving shoutouts).'],
+            'limit' => ['type' => 'integer', 'description' => 'Max results. Default 25.'],
+          ],
+          'required' => [],
+        ],
+      ],
+      [
+        'name' => 'trigger_x_import',
+        'description' => 'Trigger an X data re-import for a creator via the Next.js frontend. Re-fetches profile, posts, followers from X API and syncs to Drupal.',
+        'input_schema' => [
+          'type' => 'object',
+          'properties' => [
+            'username' => ['type' => 'string', 'description' => 'X username to re-import (without @).'],
+          ],
+          'required' => ['username'],
+        ],
+      ],
+      [
+        'name' => 'trigger_site_generation',
+        'description' => 'Trigger dual-AI site generation for a creator. Grok analyzes the X profile, then Claude Haiku generates storefront components.',
+        'input_schema' => [
+          'type' => 'object',
+          'properties' => [
+            'username' => ['type' => 'string', 'description' => 'X username to generate site for (without @).'],
+          ],
+          'required' => ['username'],
+        ],
+      ],
     ];
   }
 
@@ -265,6 +338,12 @@ class ToolRegistry {
         'recent_logs' => $this->recentLogs($input),
         'sql_query' => $this->sqlQuery($input),
         'manage_module' => $this->manageModule($input),
+        'list_creator_profiles' => $this->listCreatorProfiles($input),
+        'get_creator_profile' => $this->getCreatorProfile($input),
+        'list_commerce_stores_x' => $this->listCommerceStoresX($input),
+        'list_shoutouts' => $this->listShoutouts($input),
+        'trigger_x_import' => $this->triggerXImport($input),
+        'trigger_site_generation' => $this->triggerSiteGeneration($input),
         default => ['error' => "Unknown tool: $tool_name"],
       };
     }
@@ -642,6 +721,281 @@ class ToolRegistry {
     }
 
     return ['error' => "Unknown action: {$input['action']}"];
+  }
+
+  // ---------------------------------------------------------------------------
+  // X / Creator-specific tools
+  // ---------------------------------------------------------------------------
+
+  protected function listCreatorProfiles(array $input): array {
+    $storage = $this->entityTypeManager->getStorage('node');
+    $query = $storage->getQuery()->accessCheck(FALSE)
+      ->condition('type', 'creator_x_profile')
+      ->sort('changed', 'DESC');
+
+    if (!empty($input['theme'])) {
+      $query->condition('field_store_theme', $input['theme']);
+    }
+    if (!empty($input['min_followers'])) {
+      $query->condition('field_follower_count', $input['min_followers'], '>=');
+    }
+    if (!empty($input['has_store'])) {
+      $query->exists('field_linked_store');
+    }
+
+    $limit = $input['limit'] ?? 25;
+    $ids = $query->range(0, $limit)->execute();
+    $nodes = $storage->loadMultiple($ids);
+
+    $results = [];
+    foreach ($nodes as $node) {
+      $results[] = [
+        'nid' => $node->id(),
+        'title' => $node->getTitle(),
+        'x_username' => $node->hasField('field_x_username') ? $node->get('field_x_username')->getString() : '',
+        'follower_count' => $node->hasField('field_follower_count') ? (int) $node->get('field_follower_count')->getString() : 0,
+        'theme' => $node->hasField('field_store_theme') ? $node->get('field_store_theme')->getString() : '',
+        'verified_type' => $node->hasField('field_x_verified_type') ? $node->get('field_x_verified_type')->getString() : '',
+        'has_store' => $node->hasField('field_linked_store') && !$node->get('field_linked_store')->isEmpty(),
+        'status' => $node->isPublished() ? 'published' : 'unpublished',
+        'changed' => date('Y-m-d H:i:s', $node->getChangedTime()),
+      ];
+    }
+    return ['count' => count($results), 'profiles' => $results];
+  }
+
+  protected function getCreatorProfile(array $input): array {
+    $storage = $this->entityTypeManager->getStorage('node');
+    $ids = $storage->getQuery()->accessCheck(FALSE)
+      ->condition('type', 'creator_x_profile')
+      ->condition('field_x_username', $input['username'])
+      ->range(0, 1)
+      ->execute();
+
+    if (empty($ids)) {
+      return ['error' => "No creator profile found for @{$input['username']}."];
+    }
+
+    $node = $storage->load(reset($ids));
+    $profile = [
+      'nid' => $node->id(),
+      'title' => $node->getTitle(),
+      'status' => $node->isPublished() ? 'published' : 'unpublished',
+      'created' => date('Y-m-d H:i:s', $node->getCreatedTime()),
+      'changed' => date('Y-m-d H:i:s', $node->getChangedTime()),
+    ];
+
+    // Map all X-specific fields.
+    $field_map = [
+      'field_x_username' => 'x_username',
+      'field_x_user_id' => 'x_user_id',
+      'field_x_display_name' => 'display_name',
+      'field_x_verified_type' => 'verified_type',
+      'field_x_avatar_url' => 'avatar_url',
+      'field_bio_description' => 'bio',
+      'field_follower_count' => 'follower_count',
+      'field_store_theme' => 'theme',
+      'field_profile_picture' => 'profile_picture',
+      'field_background_banner' => 'banner',
+    ];
+
+    foreach ($field_map as $drupal_field => $key) {
+      if ($node->hasField($drupal_field) && !$node->get($drupal_field)->isEmpty()) {
+        $profile[$key] = $node->get($drupal_field)->getString();
+      }
+    }
+
+    // Decode JSON fields.
+    $json_fields = [
+      'field_top_posts' => 'top_posts',
+      'field_top_followers' => 'top_followers',
+      'field_metrics' => 'metrics',
+    ];
+    foreach ($json_fields as $drupal_field => $key) {
+      if ($node->hasField($drupal_field) && !$node->get($drupal_field)->isEmpty()) {
+        $raw = $node->get($drupal_field)->getString();
+        $decoded = json_decode($raw, TRUE);
+        $profile[$key] = $decoded ?: $raw;
+      }
+    }
+
+    // Linked store reference.
+    if ($node->hasField('field_linked_store') && !$node->get('field_linked_store')->isEmpty()) {
+      $store_ref = $node->get('field_linked_store')->entity;
+      if ($store_ref) {
+        $profile['linked_store'] = [
+          'id' => $store_ref->id(),
+          'name' => $store_ref->label(),
+        ];
+      }
+    }
+
+    return $profile;
+  }
+
+  protected function listCommerceStoresX(array $input): array {
+    if (!$this->moduleHandler->moduleExists('commerce_store')) {
+      return ['error' => 'Commerce Store module is not enabled.'];
+    }
+
+    $storage = $this->entityTypeManager->getStorage('commerce_store');
+    $query = $storage->getQuery()->accessCheck(FALSE)
+      ->sort('changed', 'DESC');
+
+    if (!empty($input['theme'])) {
+      $query->condition('field_store_theme', $input['theme']);
+    }
+
+    $limit = $input['limit'] ?? 25;
+    $ids = $query->range(0, $limit)->execute();
+    $stores = $storage->loadMultiple($ids);
+
+    $results = [];
+    foreach ($stores as $store) {
+      $row = [
+        'id' => $store->id(),
+        'name' => $store->label(),
+        'type' => $store->bundle(),
+        'status' => $store->isPublished() ? 'published' : 'unpublished',
+      ];
+
+      $x_fields = [
+        'field_store_slug' => 'slug',
+        'field_store_theme' => 'theme',
+        'field_follower_count' => 'followers',
+        'field_following_count' => 'following',
+        'field_social_bio' => 'social_bio',
+        'field_printful_store_id' => 'printful_store_id',
+        'field_x_seed_imported' => 'x_seed_imported',
+      ];
+
+      foreach ($x_fields as $drupal_field => $key) {
+        if ($store->hasField($drupal_field) && !$store->get($drupal_field)->isEmpty()) {
+          $row[$key] = $store->get($drupal_field)->getString();
+        }
+      }
+
+      // Linked X profile.
+      if ($store->hasField('field_linked_x_profile') && !$store->get('field_linked_x_profile')->isEmpty()) {
+        $profile = $store->get('field_linked_x_profile')->entity;
+        if ($profile) {
+          $row['linked_x_profile'] = $profile->getTitle();
+        }
+      }
+
+      $results[] = $row;
+    }
+    return ['count' => count($results), 'stores' => $results];
+  }
+
+  protected function listShoutouts(array $input): array {
+    $storage = $this->entityTypeManager->getStorage('node');
+    $query = $storage->getQuery()->accessCheck(FALSE)
+      ->condition('type', 'shoutout')
+      ->sort('created', 'DESC');
+
+    if (!empty($input['status']) && $input['status'] !== 'all') {
+      $query->condition('field_shoutout_status', $input['status']);
+    }
+    if (!empty($input['creator'])) {
+      // Find shoutouts targeted at this creator's store.
+      $query->condition('field_from_x_username', $input['creator']);
+    }
+
+    $limit = $input['limit'] ?? 25;
+    $ids = $query->range(0, $limit)->execute();
+    $nodes = $storage->loadMultiple($ids);
+
+    $results = [];
+    foreach ($nodes as $node) {
+      $row = [
+        'nid' => $node->id(),
+        'created' => date('Y-m-d H:i:s', $node->getCreatedTime()),
+      ];
+
+      $fields = [
+        'field_shoutout_status' => 'status',
+        'field_shoutout_text' => 'text',
+        'field_from_x_username' => 'from_username',
+        'field_from_x_user_id' => 'from_user_id',
+        'field_source_post_id' => 'source_post_id',
+      ];
+
+      foreach ($fields as $drupal_field => $key) {
+        if ($node->hasField($drupal_field) && !$node->get($drupal_field)->isEmpty()) {
+          $row[$key] = $node->get($drupal_field)->getString();
+        }
+      }
+
+      // Target store.
+      if ($node->hasField('field_to_store') && !$node->get('field_to_store')->isEmpty()) {
+        $store = $node->get('field_to_store')->entity;
+        if ($store) {
+          $row['to_store'] = $store->label();
+        }
+      }
+
+      $results[] = $row;
+    }
+    return ['count' => count($results), 'shoutouts' => $results];
+  }
+
+  protected function triggerXImport(array $input): array {
+    $frontend_url = $this->configFactory->get('rareimagery_ai.settings')->get('frontend_url');
+    if (empty($frontend_url)) {
+      return ['error' => 'Frontend URL is not configured. Set it at /admin/config/rareimagery/ai.'];
+    }
+
+    $username = $input['username'];
+    $url = rtrim($frontend_url, '/') . '/api/stores/import-x-data';
+
+    try {
+      $client = new \GuzzleHttp\Client();
+      $response = $client->post($url, [
+        'json' => ['username' => $username],
+        'headers' => ['Content-Type' => 'application/json'],
+        'timeout' => 30,
+      ]);
+
+      $result = json_decode($response->getBody()->getContents(), TRUE);
+      return [
+        'success' => TRUE,
+        'message' => "Triggered X import for @{$username}.",
+        'response' => $result,
+      ];
+    }
+    catch (\Exception $e) {
+      return ['error' => "Failed to trigger X import for @{$username}: " . $e->getMessage()];
+    }
+  }
+
+  protected function triggerSiteGeneration(array $input): array {
+    $frontend_url = $this->configFactory->get('rareimagery_ai.settings')->get('frontend_url');
+    if (empty($frontend_url)) {
+      return ['error' => 'Frontend URL is not configured. Set it at /admin/config/rareimagery/ai.'];
+    }
+
+    $username = $input['username'];
+    $url = rtrim($frontend_url, '/') . '/api/site/generate';
+
+    try {
+      $client = new \GuzzleHttp\Client();
+      $response = $client->post($url, [
+        'json' => ['username' => $username],
+        'headers' => ['Content-Type' => 'application/json'],
+        'timeout' => 60,
+      ]);
+
+      $result = json_decode($response->getBody()->getContents(), TRUE);
+      return [
+        'success' => TRUE,
+        'message' => "Triggered site generation for @{$username}.",
+        'response' => $result,
+      ];
+    }
+    catch (\Exception $e) {
+      return ['error' => "Failed to trigger site generation for @{$username}: " . $e->getMessage()];
+    }
   }
 
 }

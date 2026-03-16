@@ -81,6 +81,13 @@ class AiSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('xai.model') ?: 'grok-3-fast',
     ];
 
+    $form['frontend_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Frontend URL'),
+      '#default_value' => $config->get('frontend_url') ?: 'https://rareimagery.net',
+      '#description' => $this->t('Next.js frontend base URL for triggering X imports and site generation.'),
+    ];
+
     $form['system_prompt'] = [
       '#type' => 'textarea',
       '#title' => $this->t('System Prompt'),
@@ -99,6 +106,7 @@ class AiSettingsForm extends ConfigFormBase {
       ->set('claude.model', $form_state->getValue('claude_model'))
       ->set('xai.api_key', $form_state->getValue('xai_api_key'))
       ->set('xai.model', $form_state->getValue('xai_model'))
+      ->set('frontend_url', $form_state->getValue('frontend_url'))
       ->set('system_prompt', $form_state->getValue('system_prompt'))
       ->save();
     parent::submitForm($form, $form_state);
