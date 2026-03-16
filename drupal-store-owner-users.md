@@ -43,6 +43,7 @@ Configure these at `/admin/people/permissions`.
 ### Commerce — Store
 | Permission | Grant? | Notes |
 |---|---|---|
+| Create new store | ✅ | Required for API-backed store creation via Next.js / JSON:API |
 | View own store | ✅ | |
 | Edit own store | ✅ | |
 | Delete own store | ❌ | Platform admin only |

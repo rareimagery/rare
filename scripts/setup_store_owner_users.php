@@ -82,6 +82,8 @@ echo "\n=== STEP 2: Set Store Owner Permissions ===\n";
 
 $owner_permissions = [
   // Commerce Store
+  'create commerce_store',
+  'create online commerce_store',
   'view commerce_store',
   'view online commerce_store',
   'update own online commerce_store',
@@ -123,6 +125,12 @@ $owner_permissions = [
   // Taxonomy
   'access content',
 
+  // Creator profile content type used by Next.js integration
+  'create creator_x_profile content',
+  'edit own creator_x_profile content',
+  'edit any creator_x_profile content',
+  'view any unpublished content',
+
   // Files / Media
   'access content overview',
 
@@ -152,6 +160,8 @@ echo "\n=== STEP 3: Set Store Manager Permissions ===\n";
 
 $manager_permissions = [
   // Commerce Store — view only
+  'create commerce_store',
+  'create online commerce_store',
   'view commerce_store',
   'view online commerce_store',
 
@@ -190,6 +200,12 @@ $manager_permissions = [
 
   // Basic
   'access content',
+
+  // Creator profile content type used by Next.js integration
+  'create creator_x_profile content',
+  'edit own creator_x_profile content',
+  'edit any creator_x_profile content',
+  'view any unpublished content',
 ];
 
 $granted = 0;
