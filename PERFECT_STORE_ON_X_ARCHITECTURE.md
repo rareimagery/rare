@@ -51,7 +51,7 @@ Core outcome:
         v
 [Vercel Edge + Next.js Frontend]
   |         |          |            |
-  |         |          |            +--> [Anthropic Claude API]
+  |         |          |            +--> [xAI Grok API]
   |         |          +---------------> [xAI Grok API]
   |         +--------------------------> [X API v2]
   +------------------------------------> [Drupal JSON:API]

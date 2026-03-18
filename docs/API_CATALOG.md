@@ -482,7 +482,7 @@ Response: ReadableStream (streaming JSX code)
 Errors:   429 (rate limit: 10/hour)
 ```
 
-**Details:** Model: `claude-haiku-4-5-20241022`. System prompt includes BASE_RULES + theme-specific styling instructions.
+**Details:** Model: `grok-3-mini`. System prompt includes BASE_RULES + theme-specific styling instructions.
 
 **Source:** `src/app/api/chat/route.ts`
 

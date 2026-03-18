@@ -382,7 +382,7 @@ Per-user tracking via in-memory Map keyed by user ID
 Reset when window expires
 ```
 
-**Model:** Claude Haiku 4.5 (`claude-haiku-4-5-20241022`)
+**Model:** Grok (`grok-3-mini`)
 **Streaming:** enabled (returns `ReadableStream`)
 **Theme-specific system prompts** for each of the 6 themes
 

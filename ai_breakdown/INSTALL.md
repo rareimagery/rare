@@ -24,7 +24,7 @@ ai_provider/                          ← COPY THIS FOLDER TO DRUPAL
     │   └── AiResponse.php            Normalized response DTO
     └── Provider/
         ├── AiProviderInterface.php   Contract (all providers implement this)
-        ├── ClaudeProvider.php        Anthropic Sonnet 4.6 integration
+        ├── ClaudeProvider.php        Anthropic Sonnet 4.6 integration (legacy, Grok preferred)
         └── GrokProvider.php          xAI Grok integration
 
 nextjs-route/                         ← COPY THE route.ts INTO YOUR NEXT.JS APP
@@ -36,10 +36,10 @@ nextjs-route/                         ← COPY THE route.ts INTO YOUR NEXT.JS AP
 
 SSH into your VPS. Add to your `.env` (same file with your Grok/Stripe keys):
 
-    ANTHROPIC_API_KEY=sk-ant-your-key-here
-    CLAUDE_MODEL=claude-sonnet-4-6
+    XAI_API_KEY=your-key-from-console.x.ai
+    GROK_MODEL=grok-3-mini
     AI_PROVIDER_DEFAULT_PRIMARY=grok
-    AI_PROVIDER_DEFAULT_FALLBACK=claude
+    AI_PROVIDER_DEFAULT_FALLBACK=grok
     AI_PROVIDER_PAGE_BUILDER_PRIMARY=grok
 
 Restart PHP-FPM after:
@@ -91,22 +91,20 @@ Make sure DRUPAL_BASE_URL and DRUPAL_API_TOKEN are set in your
 Next.js `.env.local`.
 
 
-## Step 5 — Test Claude API Key
+## Step 5 — Test xAI/Grok API Key
 
 From VPS, confirm the key works:
 
-    curl -s https://api.anthropic.com/v1/messages \
-      -H "x-api-key: $ANTHROPIC_API_KEY" \
-      -H "anthropic-version: 2023-06-01" \
+    curl -s https://api.x.ai/v1/chat/completions \
+      -H "Authorization: Bearer $XAI_API_KEY" \
       -H "content-type: application/json" \
       -d '{
-        "model": "claude-sonnet-4-6",
+        "model": "grok-3-mini",
         "max_tokens": 256,
-        "thinking": {"type": "disabled"},
-        "messages": [{"role": "user", "content": "Reply: {\"status\": \"ok\"}"}]
+        "messages": [{"role": "user", "content": "Reply with: {\\"status\\": \\"ok\\"}"}]
       }'
 
-Should return JSON with content[0].text containing {"status": "ok"}.
+Should return JSON with choices[0].message.content containing {"status": "ok"}.
 
 
 ## Step 6 — Test Drupal Endpoint

@@ -30,7 +30,7 @@ Every creator gets a branded subdomain (`creatorname.rareimagery.net`) with a si
 | **DNS & CDN** | Cloudflare | Wildcard subdomain routing; CDN/caching layer |
 | **Payments** | Stripe 20.x | One-time + recurring billing via `add_invoice_items`; webhook handling |
 | **AI — Theme/Import** | xAI Grok API | X profile imports, theme generation, product suggestions (`src/lib/grok.ts`) |
-| **AI — Chat/Generation** | Anthropic Claude API (`@anthropic-ai/sdk` 0.78) | Site generation (`src/lib/ai/generate-site.ts`), theme chat, page builder |
+| **AI — Chat/Generation** | xAI Grok API (fetch) | Site generation (`src/lib/ai/generate-site.ts`), theme chat, page builder |
 | **AI — Drupal Admin** | Claude + Grok (tool-use agents) | `rareimagery_ai` Drupal module with `AiAgent`, `ClaudeClient`, `XaiClient` |
 | **Auth** | X OAuth 2.0 (creator login) + email/password; NextAuth 4.x (session management) | `src/lib/auth.ts` |
 | **Print-on-Demand** | Printful | 13 API routes; `src/lib/printful.ts` (20KB client); `rareimagery_xstore` Drupal integration |
@@ -426,7 +426,7 @@ White-label iOS/Android apps as a **paid upsell**.
 ### Primary Scaling Costs to Watch
 1. **Vercel bandwidth** beyond Pro's monthly allowance (partially mitigated by Cloudflare CDN)
 2. **Stripe flat fee** at high volume of low-value transactions
-3. **Grok + Claude API costs** — negligible per signup; page builder usage is the variable
+3. **Grok API costs** — negligible per signup; page builder usage is the variable
 
 ### Cost Mitigation
 - Saved builds eliminate repeat AI API costs
@@ -461,7 +461,7 @@ Configured across localhost (`.env.local`), Vercel (production + development), a
 | `X_CONSUMER_KEY` / `X_CONSUMER_SECRET` | X API (OAuth 1.0a) |
 | `X_API_BEARER_TOKEN` | X App-only auth |
 | `XAI_API_KEY` | Grok AI |
-| `ANTHROPIC_API_KEY` | Claude AI |
+| `XAI_API_KEY` | xAI/Grok AI |
 | `STRIPE_*` | Stripe payments |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | Brevo email |
 | `TELNYX_API_KEY` / `TELNYX_FROM_NUMBER` | SMS |

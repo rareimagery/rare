@@ -182,7 +182,6 @@ X_API_BEARER_TOKEN=<from developer.x.com>
 
 # AI
 XAI_API_KEY=<from console.x.ai>
-ANTHROPIC_API_KEY=<from console.anthropic.com>
 
 # Payments
 STRIPE_SECRET_KEY=sk_live_...
@@ -197,9 +196,8 @@ PRINTFUL_API_KEY=<from printful.com/dashboard>
 
 | Key | Source | Purpose |
 |-----|--------|---------|
-| `XAI_API_KEY` | console.x.ai | Grok AI for profile enhancement |
+| `XAI_API_KEY` | console.x.ai | Grok AI for profile enhancement + page builder |
 | `X_CLIENT_ID/SECRET` | developer.x.com | X OAuth 2.0 login (NextAuth) |
-| `ANTHROPIC_API_KEY` | console.anthropic.com | Claude Haiku page builder |
 | `STRIPE_*` | dashboard.stripe.com | Payments + Connect |
 | `PRINTFUL_API_KEY` | printful.com/dashboard | Print-on-demand |
 
@@ -546,7 +544,7 @@ Order status updated in Drupal
 - TypeScript 5
 - Tailwind CSS v4
 - NextAuth 4.24.13
-- Anthropic SDK (Claude Haiku)
+- xAI Grok SDK (site generation, page builder)
 - Stripe SDK
 
 ## Directory Structure
@@ -1089,7 +1087,7 @@ A floating AI chatbot that generates Tailwind CSS components.
 
 ### Architecture
 ```
-FloatingBuilder.tsx → /api/chat → Claude Haiku 4.5 → generated code
+FloatingBuilder.tsx → /api/chat → Grok-3-mini → generated code
                    → /api/builds → Drupal (save/load builds)
 ```
 
@@ -1103,7 +1101,7 @@ FloatingBuilder.tsx → /api/chat → Claude Haiku 4.5 → generated code
 | `BuilderGate.tsx` | 22 | Only shows builder if user owns the store |
 
 ### 3 Tabs
-1. **Generate** — Text prompt → Claude Haiku → code output + copy button
+1. **Generate** — Text prompt → Grok → code output + copy button
 2. **Preview** — Sandboxed iframe renders the generated component live
 3. **Saved Builds** — Load or delete previously saved builds
 
@@ -1285,7 +1283,7 @@ All API routes live under `src/app/api/` and run server-side on Vercel.
 | Route | Method | Purpose |
 |-------|--------|---------|
 | `/api/builds` | GET/POST/DELETE | Page build CRUD (max 20 per store) |
-| `/api/chat` | POST | Claude Haiku generates Tailwind components |
+| `/api/chat` | POST | Grok generates Tailwind components |
 
 ## Printful
 

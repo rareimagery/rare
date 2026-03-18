@@ -147,9 +147,9 @@ AI page builder for generating React components.
 
 | Property | Value |
 |---|---|
-| **SDK** | `@anthropic-ai/sdk` |
-| **Model** | `claude-haiku-4-5-20241022` |
-| **Auth** | `ANTHROPIC_API_KEY` |
+| **SDK** | `fetch` (xAI REST API) |
+| **Model** | `grok-3-mini` |
+| **Auth** | `XAI_API_KEY` |
 | **Streaming** | Enabled |
 
 ### Usage
@@ -402,8 +402,7 @@ pbs.twimg.com         — X profile images
 | Variable | Service | Purpose |
 |---|---|---|
 | `DRUPAL_API_TOKEN` | Drupal | Bearer token (alternative to user/pass) |
-| `XAI_API_KEY` | xAI Grok | Profile enhancement |
-| `ANTHROPIC_API_KEY` | Claude | Page builder AI |
+| `XAI_API_KEY` | xAI/Grok | Page builder AI + profile enhancement |
 | `XMONEY_API_KEY` | X Money | Payment provider (not yet available) |
 | `SMTP_USER` / `SMTP_PASS` | Brevo | Email notifications |
 | `TELNYX_API_KEY` / `TELNYX_FROM_NUMBER` | Telnyx | SMS notifications |

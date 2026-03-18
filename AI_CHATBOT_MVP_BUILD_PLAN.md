@@ -11,12 +11,12 @@ Here's what's already live and can be reused directly:
 
 | Existing Component | File | Reuse For |
 |---|---|---|
-| Claude Haiku streaming API | `src/app/api/chat/route.ts` | Chatbot backend — already streams JSX via Haiku with rate limiting (10/hr) |
+| Grok streaming API | `src/app/api/chat/route.ts` | Chatbot backend — already streams JSX via Grok with rate limiting (10/hr) |
 | Builds CRUD API | `src/app/api/builds/route.ts` | "Apply to storefront" — already saves/loads/deletes builds in `field_page_builds` |
 | Drupal builds persistence | `src/lib/drupalBuilds.ts` | Storage layer — already handles JSON read/write to Drupal via cookie auth |
 | LivePreview renderer | `src/components/builder/LivePreview.tsx` | Preview pane — already extracted as shared component |
 | Grok profile enhancement | `src/lib/grok.ts` | Creator context injection — `enhanceCreatorProfile()` already returns bio, products, theme, sentiment |
-| Dual-AI site generation | `src/lib/ai/generate-site.ts` | Orchestration pattern — Grok analyzes → Claude generates, with graceful fallback |
+| Dual-AI site generation | `src/lib/ai/generate-site.ts` | Orchestration pattern — Grok analyzes → Grok generates, with graceful fallback |
 | Theme generation + presets | `src/app/api/stores/generate-theme/route.ts` | Subculture awareness — 10 presets already wired with palettes + typography |
 | Drupal auth helpers | `src/lib/drupal.ts` | Auth — `drupalWriteHeaders()` for saves, `drupalAuthHeaders()` for reads |
 
@@ -40,10 +40,10 @@ Here's what's already live and can be reused directly:
 
 | Item | Cost | Notes |
 |------|------|-------|
-| Haiku per storefront generation | ~$0.008 | ~500 input + ~2000 output tokens |
+| Grok per storefront generation | ~$0.015 | ~500 input + ~2000 output tokens |
 | 100 creators × 3 generations each | ~$2.40 | Negligible |
 | 1000 creators × 5 generations each | ~$40.00 | Still negligible |
-| Anthropic API key | Free to provision | Pay-as-you-go |
+| xAI API key | Free to provision | pay.x.ai |
 
 **Bottom line:** You can run this for months before AI costs matter.
 
@@ -96,7 +96,7 @@ interface ChatState {
 
 **Current `/api/chat/route.ts` already does:**
 - Accepts messages array + theme context
-- Streams Claude Haiku responses
+- Streams Grok responses
 - Rate limits (10/hr per user)
 - Returns JSX/component code as text stream
 
@@ -176,7 +176,7 @@ const handlePostToX = () => {
 };
 ```
 
-**Enhance later** (post-MVP): Use Claude to generate a custom tweet thread based on the generated page content. For MVP, the pre-filled text is sufficient.
+**Enhance later** (post-MVP): Use Grok to generate a custom tweet thread based on the generated page content. For MVP, the pre-filled text is sufficient.
 
 ### 2C: Subculture Preset Quick-Select
 
@@ -200,7 +200,7 @@ This leverages the existing theme awareness in `/api/chat` — the system prompt
 ### 3A: Loading & Error States
 
 - Typing indicator while streaming
-- Graceful error message if Claude fails (no raw error dumps)
+- Graceful error message if Grok fails (no raw error dumps)
 - "Try again" button on failed generations
 - Rate limit hit → show remaining count + reset time
 
@@ -259,7 +259,7 @@ Creator types prompt in SellerChatbot
   POST /api/chat (existing route, extended with creatorContext)
         │
         ├─ System prompt: theme rules + creator context + subculture presets
-        ├─ Model: claude-haiku (already configured)
+        ├─ Model: grok-3-mini (already configured)
         ├─ Rate limit: 10/hr (already enforced)
         │
         ▼
@@ -295,10 +295,10 @@ Creator types prompt in SellerChatbot
 
 | Feature | Why Deferred | Trigger to Revisit |
 |---------|-------------|-------------------|
-| Drupal `ai_provider` service layer | Next.js calls Claude directly — no need for Drupal routing | Need centralized provider management |
-| Premium chatbot tier | Haiku too cheap to meter at launch | Costs exceed $50/mo or abuse |
+| Drupal `ai_provider` service layer | Next.js calls Grok directly — no need for Drupal routing | Need centralized provider management |
+| Premium chatbot tier | Grok too cheap to meter at launch | Costs exceed $50/mo or abuse |
 | Rate limiting tiers | 10/hr already enforced; no premium/free split needed yet | Abuse or cost spike |
-| Token usage logging in Drupal | Anthropic dashboard is sufficient | Before premium tier goes live |
+| Token usage logging in Drupal | xAI dashboard is sufficient | Before premium tier goes live |
 | Persistent conversation history | Stateless is fine at launch | Creators ask for "edit my last generation" |
 | Separate SellerChatbot from FloatingBuilder | Separate component gives better UX | If builder feels too crowded |
 | AI-generated X thread copy | Creators can copy their link for now | Creator feedback requests it |
@@ -307,13 +307,12 @@ Creator types prompt in SellerChatbot
 
 ## Post-MVP Roadmap (After Validation)
 
-1. **AI-generated X thread** — Claude writes custom tweet copy based on generated page
+1. **AI-generated X thread** — Grok writes custom tweet copy based on generated page
 2. **Persistent conversation history** — Store in Drupal, enable "make it like last time"
 3. **Usage metering + premium tier** — Token logging, 3 free/day, unlimited paid
-4. **Grok fallback** — Auto-switch to Grok if Claude fails (provider abstraction)
-5. **Multi-page generation** — Generate full storefront (hero + about + products + footer) in one prompt
-6. **Shoutout Walls** — Friends promoting friends as the organic ad unit
-7. **Voice input** — Web Speech API for hands-free prompting on mobile
+4. **Multi-page generation** — Generate full storefront (hero + about + products + footer) in one prompt
+5. **Shoutout Walls** — Friends promoting friends as the organic ad unit
+6. **Voice input** — Web Speech API for hands-free prompting on mobile
 
 ---
 

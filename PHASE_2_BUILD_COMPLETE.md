@@ -190,7 +190,6 @@ X_BEARER_TOKEN=your-x-bearer-token
 
 # AI Services
 XAI_API_KEY=your-xai-api-key
-ANTHROPIC_API_KEY=your-anthropic-api-key
 
 # Payments (optional)
 STRIPE_SECRET_KEY=your-stripe-key

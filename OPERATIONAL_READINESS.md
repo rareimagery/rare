@@ -67,7 +67,7 @@ The PERFECT_STORE_ON_X_ARCHITECTURE is fully implemented and ready for end-to-en
 
 ### 5. AI Architecture (Dual Pipeline)
 - [x] Grok profile analysis → category/theme keywords
-- [x] Claude component generation → hero/about sections
+- [x] Grok component generation → hero/about sections
 - [x] Theme recommendation engine
 - [x] Interactive builder chat with streaming
 - [x] Rate limiting (3 generations/hour, 10 chat messages/hour)
@@ -77,7 +77,7 @@ The PERFECT_STORE_ON_X_ARCHITECTURE is fully implemented and ready for end-to-en
 - `POST /api/chat` — Streaming builder chat
 - `PATCH /api/stores/generate-theme` — MySpace quiz → theme generation
 
-**Test:** Requires `ANTHROPIC_API_KEY` + `XAI_API_KEY` in .env
+**Test:** Requires `XAI_API_KEY` in .env
 
 ### 6. X Integration
 - [x] X OAuth 2.0 authentication with offline scope
@@ -221,8 +221,7 @@ Ensure these environment variables are set:
 - `ADMIN_X_USERNAMES` — Comma-separated admin handles
 
 **AI Services:**
-- `ANTHROPIC_API_KEY` — Claude (site generation, builder chat)
-- `XAI_API_KEY` — Grok (profile analysis, feed fallback)
+- `XAI_API_KEY` — Grok (site generation, builder chat, profile analysis, feed fallback)
 
 **Payments:**
 - `STRIPE_SECRET_KEY` — Stripe API key
@@ -252,7 +251,7 @@ Ensure these environment variables are set:
 1. Login with X
 2. Run /api/site/generate
 3. Grok analyzes profile → category/theme
-4. Claude generates hero + about sections
+4. Grok generates hero + about sections
 5. Theme applied automatically
 6. Store ready in < 1 minute
 ```
@@ -313,7 +312,6 @@ Ensure these environment variables are set:
 [Vercel Edge + Next.js Frontend] ← Implementation complete
   ├→ [X API v2] ✅
   ├→ [Grok API] ✅
-  ├→ [Claude API] ✅
   ├→ [Drupal JSON:API] ✅
   └→ [Stripe] ✅
   

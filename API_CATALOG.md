@@ -91,7 +91,7 @@ Response: { success }
 
 ### POST /api/stores/generate-theme `[JWT]`
 
-AI-generates a complete MySpace-era theme config via Claude.
+AI-generates a complete MySpace-era theme config via Grok.
 
 ```
 Request:  { profileId, quizResponses, xData }
@@ -104,7 +104,7 @@ Response: { themeConfig: { background, profileSection, pfp, top8, music, ... } }
 
 ### POST /api/stores/theme-chat `[JWT]`
 
-Interactive Claude chat for iterative MySpace theme building.
+Interactive Grok chat for iterative MySpace theme building.
 
 ```
 Request:  { messages, currentSection, profileId }
@@ -474,7 +474,7 @@ Response: { products: [...] }
 
 ### POST /api/chat `[JWT]`
 
-Rate-limited Claude chat for component generation.
+Rate-limited Grok chat for component generation.
 
 ```
 Request:  { prompt, theme }
@@ -482,7 +482,7 @@ Response: ReadableStream (streaming JSX code)
 Errors:   429 (rate limit: 10/hour)
 ```
 
-**Details:** Model: `claude-haiku-4-5-20241022`. System prompt includes BASE_RULES + theme-specific styling instructions.
+**Details:** Model: `grok-3-mini`. System prompt includes BASE_RULES + theme-specific styling instructions.
 
 **Source:** `src/app/api/chat/route.ts`
 

@@ -13,7 +13,7 @@ FloatingBuilder.tsx — draggable panel, live preview iframe
         ↓
 /api/chat/route.ts — auth guard, rate limit, Anthropic proxy
         ↓
-claude-haiku-4-5 — stateless, Y2K-aware system prompt
+grok-3-mini — stateless, Y2K-aware system prompt
         ↓
 /api/builds/route.ts — save/load named builds via Drupal JSON:API
         ↓
@@ -182,7 +182,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { validateDrupalSession } from '@/lib/drupalAuth'
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const XAI_API_URL = "https://api.x.ai/v1/chat/completions";
 
 const rateLimitMap = new Map<string, { count: number; reset: number }>()
 const RATE_LIMIT = 10
@@ -227,7 +227,7 @@ export async function POST(req: NextRequest) {
   }
 
   const response = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model: 'grok-3-mini',
     max_tokens: 2000,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: message }],
@@ -551,7 +551,7 @@ export default function LivePreview({ code }: { code: string }) {
 ## 8. Environment Variables
 
 ```env
-ANTHROPIC_API_KEY=sk-ant-...
+XAI_API_KEY=xai-...
 DRUPAL_API_URL=https://api.rareimagery.net
 DRUPAL_SERVICE_TOKEN=your-server-to-server-oauth-token
 ```

@@ -11,8 +11,7 @@ Request path:
 4. Data is fetched from Drupal JSON:API via [frontend/src/lib/drupal.ts](frontend/src/lib/drupal.ts).
 5. External side systems are invoked as needed:
 - X API via x-api client/import stack
-- Grok via [frontend/src/lib/grok.ts](frontend/src/lib/grok.ts) and dual-AI pipeline
-- Claude via [frontend/src/app/api/chat/route.ts](frontend/src/app/api/chat/route.ts) and [frontend/src/lib/ai/generate-site.ts](frontend/src/lib/ai/generate-site.ts)
+- Grok via [frontend/src/lib/grok.ts](frontend/src/lib/grok.ts), [frontend/src/app/api/chat/route.ts](frontend/src/app/api/chat/route.ts), and [frontend/src/lib/ai/generate-site.ts](frontend/src/lib/ai/generate-site.ts)
 - Stripe via checkout/webhook routes
 - Printful via product/order/webhook routes
 
@@ -112,7 +111,7 @@ Flow:
 1. Requires signed-in creator/admin token.
 2. Enforces generation rate limit.
 3. Pulls X data.
-4. Runs dual-AI orchestration (Grok analysis then Claude component generation).
+4. Runs Grok AI for site analysis and component generation.
 5. Saves generated data into Drupal profile metrics and published builds.
 6. Applies recommended theme and rewritten bio where possible.
 
@@ -120,7 +119,7 @@ Flow:
 
 Chat builder stream:
 - [frontend/src/app/api/chat/route.ts](frontend/src/app/api/chat/route.ts)
-- Anthropic streaming output with per-user in-memory rate limit.
+- Grok streaming output with per-user in-memory rate limit.
 
 Dual-AI site generation:
 - [frontend/src/lib/ai/generate-site.ts](frontend/src/lib/ai/generate-site.ts)
@@ -128,7 +127,7 @@ Dual-AI site generation:
 Stages:
 1. Grok profile analysis returns rewritten bio/category/theme hints.
 2. Theme resolution maps to supported storefront themes.
-3. Claude generates hero/about components, layout config, CSS, and theme overrides.
+3. Grok generates hero/about components, layout config, CSS, and theme overrides.
 4. Calling routes persist output to Drupal.
 
 ## 6) X Integration Surface (Implemented)

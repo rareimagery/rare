@@ -290,8 +290,8 @@ POST /api/chat (src/app/api/chat/route.ts)
   ├── Rate limit: 10 requests/hour per user (in-memory Map)
   │
   ▼
-Anthropic Claude API (streaming)
-  │ Model: claude-haiku-4-5-20241022
+xAI Grok API (streaming)
+  │ Model: grok-3-mini
   │ System prompt: BASE_RULES + THEME_PROMPTS[theme]
   │ → Returns React/JSX component code with Tailwind CSS
   │

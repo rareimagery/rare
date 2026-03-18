@@ -1,5 +1,5 @@
 # RareImagery Dual-AI Architecture
-## X Import → Grok + Claude Haiku → Drupal → Next.js Pipeline
+## X Import → Grok → Drupal → Next.js Pipeline
 
 ---
 
@@ -9,15 +9,12 @@ Two AIs split the workload by what they're best at:
 
 | AI | Role | Why This One | Cost |
 |---|---|---|---|
-| **Grok (xAI)** | X profile ingestion, bio rewriting, theme suggestion, social graph seeding | Native X integration, understands X culture/creator context | ~$0.002/signup |
-| **Claude Haiku 4.5** | Next.js component generation, layout assembly, style generation | Best code generation per dollar, 4–5x faster than Sonnet, 90% of Sonnet quality | $1/M input, $5/M output |
+| **Grok (xAI)** | X profile ingestion, bio rewriting, theme suggestion, site component generation | Native X integration, understands X culture/creator context, fast and cost-efficient | ~$0.015/signup |
 
-**Cost comparison for site generation (~2K input + ~4K output tokens per site):**
-- Haiku 4.5: ~$0.022/site
-- Sonnet 4.6: ~$0.066/site (3x more)
-- Opus 4.6: ~$0.110/site (5x more)
+**Cost for site generation (~2K input + ~4K output tokens per site):**
+- Grok-3: ~$0.015/site
 
-At 1,000 site generations/month, Haiku costs ~$22. That's negligible.
+At 1,000 site generations/month, Grok costs ~$15. That's negligible.
 
 ---
 
@@ -32,12 +29,7 @@ At 1,000 site generations/month, Haiku costs ~$22. That's negligible.
                     ┌──────▼───────┐      ┌──────▼───────┐
                     │  X OAuth 2.0 │      │  Grok API    │
                     │  + PKCE      │      │  (xAI)       │
-                    └──────────────┘      └──────┬───────┘
-                                                 │
-                                          ┌──────▼───────┐
-                                          │ Claude Haiku │
-                                          │ 4.5 API      │
-                                          └──────────────┘
+                    └──────────────┘      └──────────────┘
 ```
 
 ### Step-by-step:
@@ -46,7 +38,7 @@ At 1,000 site generations/month, Haiku costs ~$22. That's negligible.
 2. **X returns auth code** → Next.js exchanges for access token + refresh token
 3. **Next.js pulls X profile data** via X API v2 (`/2/users/me`)
 4. **Profile data sent to Grok** → bio rewrite, theme suggestions, category detection
-5. **Grok output + X data sent to Claude Haiku** → generates Next.js page components
+5. **Grok analyzes X data + generates** Next.js page components
 6. **Drupal creates `creator_site` entity** → stores all config, theme JSON, saved builds
 7. **Storefront goes live** at `{username}.rareimagery.net` → no Vercel config needed
 
@@ -240,17 +232,11 @@ Pinned tweet: ${pinnedTweetText || "N/A"}`,
 }
 ```
 
-### 4.2 Claude Haiku's Job (Site Generation)
+### 4.2 Grok's Site Generation Job
 
 ```typescript
-// lib/ai/haiku-site-gen.ts
-import Anthropic from "@anthropic-ai/sdk";
-import { GrokProfileOutput } from "./grok-profile";
-import { XProfileData } from "@/lib/x-api";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// lib/ai/grok-site-gen.ts
+const XAI_API_URL = "https://api.x.ai/v1/chat/completions";
 
 interface GeneratedSiteComponents {
   heroSection: string;      // JSX string
@@ -264,12 +250,16 @@ export async function generateSiteComponents(
   profile: XProfileData,
   grokAnalysis: GrokProfileOutput
 ): Promise<GeneratedSiteComponents> {
-  const message = await anthropic.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 4096,
-    messages: [
-      {
-        role: "user",
+  const res = await fetch(XAI_API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.XAI_API_KEY}` },
+    body: JSON.stringify({
+      model: "grok-3",
+      max_tokens: 4096,
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "user",
         content: `Generate Next.js/Tailwind storefront components for a creator.
 
 CREATOR DATA:
@@ -303,12 +293,12 @@ Return JSON only (no markdown fences):
     ],
   });
 
-  const textContent = message.content.find((block) => block.type === "text");
-  if (!textContent || textContent.type !== "text") {
-    throw new Error("No text response from Haiku");
-  }
+  if (!res.ok) throw new Error(`xAI API error: ${res.status}`);
+  const data = await res.json();
+  const text = data.choices?.[0]?.message?.content;
+  if (!text) throw new Error("No response from Grok");
 
-  return JSON.parse(textContent.text);
+  return JSON.parse(text);
 }
 ```
 
@@ -320,7 +310,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { fetchXProfile, fetchXFollowing } from "@/lib/x-api";
 import { analyzeXProfile } from "@/lib/ai/grok-profile";
-import { generateSiteComponents } from "@/lib/ai/haiku-site-gen";
+import { generateSiteComponents } from "@/lib/ai/grok-site-gen";
 import { createCreatorSite, seedSocialGraph } from "@/lib/drupal";
 
 export async function POST(req: NextRequest) {
@@ -340,7 +330,7 @@ export async function POST(req: NextRequest) {
     // 4. Grok analyzes the profile (AI #1)
     const grokAnalysis = await analyzeXProfile(xProfile);
 
-    // 5. Claude Haiku generates site components (AI #2)
+    // 5. Grok generates site components
     const siteComponents = await generateSiteComponents(xProfile, grokAnalysis);
 
     // 6. Create creator_site entity in Drupal
@@ -605,7 +595,7 @@ export function SiteFieldsPanel({ siteId }: { siteId: string }) {
 ### 6.3 Regenerate vs Edit
 
 Creators have two paths at all times:
-1. **AI Regenerate** — hits Grok → Haiku pipeline again, overwrites `field_page_builds`
+1. **AI Regenerate** — hits Grok pipeline again, overwrites `field_page_builds`
 2. **Manual Edit** — directly edits any field via FloatingBuilder, PATCH to Drupal
 3. **Saved Builds** — can switch between previously generated builds (stored as JSON array)
 
@@ -723,9 +713,6 @@ X_CLIENT_SECRET=
 # xAI / Grok
 XAI_API_KEY=
 
-# Anthropic / Claude Haiku
-ANTHROPIC_API_KEY=
-
 # Drupal Backend
 DRUPAL_API_URL=https://api.rareimagery.net
 DRUPAL_SERVICE_TOKEN=           # Server-to-server (user provisioning)
@@ -755,8 +742,8 @@ TELNYX_API_KEY=
 | X profile pull | X API v2 (Basic tier) | Included in $200/mo flat |
 | X following pull | X API v2 (Basic tier) | Included above |
 | Grok profile analysis | grok-3-mini | ~$0.002 |
-| Haiku site generation | claude-haiku-4-5 | ~$0.022 |
-| **Total per signup** | | **~$0.024** |
+| Grok site generation | grok-3 | ~$0.015 |
+| **Total per signup** | | **~$0.017** |
 
 At 500 signups/month: **~$12 in AI costs** + $200 X API = $212 total API spend.
 
@@ -767,7 +754,7 @@ At 500 signups/month: **~$12 in AI costs** + $200 X API = $212 total API spend.
 - [ ] X OAuth 2.0 + PKCE flow returns access_token + refresh_token
 - [ ] X API v2 `/2/users/me` returns all user.fields needed
 - [ ] Grok API returns valid JSON (grok-3-mini, not a reasoning model — no temperature issues)
-- [ ] Claude Haiku 4.5 returns valid JSON component definitions
+- [ ] Grok returns valid JSON component definitions
 - [ ] Drupal creates `creator_site` entity with all fields populated
 - [ ] Wildcard subdomain resolves to correct creator's storefront
 - [ ] FloatingBuilder can PATCH every editable field

@@ -146,14 +146,16 @@ export default function RareImageryBuilder() {
         apiMessages.unshift({ role: "user", content: text });
       }
 
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("https://api.x.ai/v1/chat/completions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.XAI_API_KEY}` },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model: "grok-3-mini",
           max_tokens: 4096,
-          system: SYSTEM_PROMPT,
-          messages: apiMessages,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            ...apiMessages,
+          ],
         }),
       });
 

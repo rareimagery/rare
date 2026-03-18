@@ -21,7 +21,7 @@
 - ✅ Auth layer: X OAuth 2.0 + Credentials via NextAuth
 - ✅ Store lifecycle: create → provision → approve pipeline
 - ✅ Payment system: Stripe integration with webhook verification
-- ✅ AI services: Grok + Claude dual pipeline (profile analysis → component generation)
+- ✅ AI services: Grok-only AI pipeline (profile analysis → component generation)
 - ✅ X integration: API client, profile import, webhooks, feed proxy
 - ✅ Drupal backend: Dual-auth (Basic reads, Cookie+CSRF writes), session caching
 - ✅ Fulfillment: Printful webhook routing (8 event types)
@@ -38,9 +38,9 @@
 5. ✅ Store Setup Checkout — Stripe session creation
 6. ✅ Product Checkout — Payment provider integration
 7. ✅ Stripe Webhook — Signature verification, lifecycle handling
-8. ✅ Grok & Claude Exports — Complete dual-AI pipeline
+8. ✅ Grok Exports — Complete AI pipeline
 9. ✅ Interactive Chat — Streaming, rate limiting (10/hour)
-10. ✅ Site Generation — Full Grok → Claude → profile patch flow
+10. ✅ Site Generation — Full Grok → profile patch flow
 11. ✅ X API Client — Bearer token + user context headers
 12. ✅ X Profile Import — Data fetch, Drupal sync, metrics
 13. ✅ X Webhooks — CRC validation, signature verification
@@ -125,8 +125,7 @@
 ### 2.4 Store Provisioning & AI Generation
 **Prerequisites:**
 - X API credentials configured
-- Grok API key (xAI) configured
-- Claude API key (Anthropic) configured
+- xAI/Grok API key configured
 - Store approved (status: provisioned)
 
 **Test Scenarios:**
@@ -135,7 +134,7 @@
 3. [ ] If no X subscription: shows upgrade prompt
 4. [ ] If subscribed: runs AI generation pipeline
 5. [ ] Grok analyzes X profile (bio, followers, recent tweets)
-6. [ ] Claude generates site components (hero, features, gallery)
+6. [ ] Grok generates site components (hero, features, gallery)
 7. [ ] Profile photo → hero background
 8. [ ] X bio → hero tagline
 9. [ ] Recent tweets → content recommendations
@@ -144,7 +143,7 @@
 **Validation Points:**
 - POST `/api/stores/provision` checks subscription via X API
 - Grok response includes `{ analysis, recommendations }`
-- Claude response includes `{ components: { hero, features, gallery } }`
+- Grok response includes `{ components: { hero, features, gallery } }`
 - Site renders within 2-3 seconds
 - Theme persists after page reload
 
@@ -251,14 +250,14 @@
 **Prerequisites:**
 - Store provisioned
 - Creator logged in
-- Claude API configured
+- Grok API configured
 
 **Test Scenarios:**
 1. [ ] Creator visits theme customization page
 2. [ ] MySpace quiz starts (20 questions)
 3. [ ] Quiz answers saved
 4. [ ] POST `/api/stores/{storeId}/generate-theme` called
-5. [ ] Claude receives: `{ quiz_answers, profile_data, previous_theme }`
+5. [ ] Grok receives: `{ quiz_answers, profile_data, previous_theme }`
 6. [ ] Theme generated: `{ colors, fonts, layout, components }`
 7. [ ] Theme applied to storefront
 8. [ ] Creator clicks "Chat to Customize"
@@ -527,4 +526,4 @@ All code-level validation has passed. No architectural gaps or implementation bl
 
 **Created:** 2025-01-15  
 **Last Updated:** 2025-01-15  
-**Validator:** GitHub Copilot (Claude Haiku 4.5)
+**Validator:** GitHub Copilot

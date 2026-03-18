@@ -131,7 +131,7 @@ Tests all 13 subsystems against running services:
 ### 2.4: Store Provisioning & AI Generation
 **File:** `integration-tests.mjs` suite `2.4-provisioning`  
 **Duration:** ~5 minutes  
-**Dependencies:** Grok API key, Claude API key
+**Dependencies:** Grok API key
 
 #### Tests:
 1. **Provisioning endpoint** — `/api/stores/provision` responds
@@ -146,7 +146,7 @@ Tests all 13 subsystems against running services:
 
 #### Failure Scenarios:
 - **Provisioning fails (500)**: Check DRUPAL_URL accessible, X_BEARER_TOKEN valid
-- **AI fails (501)**: Configure XAI_API_KEY and ANTHROPIC_API_KEY
+- **AI fails (501)**: Configure XAI_API_KEY in .env
 
 ---
 
@@ -222,7 +222,7 @@ Tests all 13 subsystems against running services:
 ### 2.9: AI Theme Customization
 **File:** `integration-tests.mjs` suite `2.9-ai`  
 **Duration:** ~3 minutes  
-**Dependencies:** Claude API key
+**Dependencies:** xAI/Grok API key
 
 #### Tests:
 1. **Theme generation** — `/api/stores/generate-theme` creates themes
@@ -236,7 +236,7 @@ Tests all 13 subsystems against running services:
 ```
 
 #### Failure Scenarios:
-- **Theme generation fails**: ANTHROPIC_API_KEY may be invalid
+- **Theme generation fails**: XAI_API_KEY may be invalid
 - **Chat fails (429)**: Rate limit exceeded (10 messages/hour)
 
 ---
@@ -394,7 +394,7 @@ Exits on first test failure (useful for debugging).
 3. **Required API Keys:**
    - X OAuth: X_CLIENT_ID, X_CLIENT_SECRET
    - Grok: XAI_API_KEY
-   - Claude: ANTHROPIC_API_KEY
+   - Grok: XAI_API_KEY
    - Stripe: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
    - Drupal: DRUPAL_URL, DRUPAL_USERNAME, DRUPAL_PASSWORD
 
@@ -523,12 +523,11 @@ STRIPE_WEBHOOK_SECRET=whsec_test_correct_secret
 - Wait 1 hour for rate limit window to reset
 - Or use different test API key
 
-### Issue: "Grok/Claude API failed"
+### Issue: "Grok API failed"
 **Solution:**
 ```bash
 # Verify API keys in .env.local:
 XAI_API_KEY=xai_...
-ANTHROPIC_API_KEY=sk-ant-...
 
 # Test API directly:
 curl -X POST https://api.x.ai/v1/chat/completions \

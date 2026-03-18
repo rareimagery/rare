@@ -18,7 +18,6 @@ Browser → Vercel (Next.js 16) → Drupal JSON:API (72.62.80.155)
                                → Stripe API
                                → Printful API
                                → xAI/Grok API
-                               → Anthropic/Claude API
 ```
 
 ---
@@ -126,7 +125,7 @@ c:\rare\
 | `/api/stores/products` | GET | Product list |
 | `/api/checkout` | POST | Stripe checkout |
 | `/api/webhooks/stripe` | POST | Stripe webhooks |
-| `/api/chat` | POST | Claude Haiku page builder |
+| `/api/chat` | POST | Grok page builder |
 | `/api/builds` | GET/POST/DELETE | Saved builds CRUD |
 | `/api/printful/connect` | POST | Printful OAuth |
 | `/api/printful/products` | GET | Printful catalog |
@@ -221,9 +220,7 @@ X_CONSUMER_SECRET=
 X_CLIENT_ID=               # NextAuth X OAuth 2.0 login
 X_CLIENT_SECRET=
 X_API_BEARER_TOKEN=
-ANTHROPIC_API_KEY=
 STRIPE_SECRET_KEY=
-STRIPE_PUBLISHABLE_KEY=
 STRIPE_WEBHOOK_SECRET=
 PRINTFUL_API_KEY=
 

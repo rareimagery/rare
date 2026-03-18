@@ -2,32 +2,32 @@
 
 ## Problem
 
-The current `/api/chat` waits for the full Claude response before returning anything. For long components (1000+ tokens), users stare at "Generating..." for 5-10 seconds with no feedback.
+The current `/api/chat` waits for the full Grok response before returning anything. For long components (1000+ tokens), users stare at "Generating..." for 5-10 seconds with no feedback.
 
 ## Solution
 
-Use Anthropic's `stream: true` option to stream text chunks as they arrive. The frontend reads the stream incrementally and updates the code preview in real time.
+Fetch the xAI Grok API and wrap the response in a `ReadableStream` to stream text chunks as they arrive. The frontend reads the stream incrementally and updates the code preview in real time.
 
 ## Files
 
-- `src/app/api/chat/route.ts` — switch to streaming Anthropic call, return ReadableStream
+- `src/app/api/chat/route.ts` — fetch xAI with full response, wrap in ReadableStream
 - `src/components/builder/FloatingBuilder.tsx` — read the stream chunk-by-chunk, update `result` state incrementally
 
 ## API Route Changes
 
 ```ts
 // Instead of:
-const response = await client.messages.create({ ... });
+const response = await fetch(XAI_API_URL, { ... });
 return NextResponse.json({ result: text });
 
 // Use:
-const stream = client.messages.stream({ ... });
-return new Response(readableStream, {
-  headers: { "Content-Type": "text/event-stream" },
+const aiRes = await fetch(XAI_API_URL, { ... });
+const text = await aiRes.text();
+const stream = new ReadableStream({ start(ctrl) { ctrl.enqueue(encoder.encode(text)); ctrl.close(); } });
+return new Response(stream, {
+  headers: { "Content-Type": "text/plain" },
 });
 ```
-
-Use `client.messages.stream()` which returns an async iterable. Pipe text delta events to the response as SSE or newline-delimited chunks.
 
 ## Frontend Changes
 
