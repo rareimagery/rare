@@ -1,0 +1,7 @@
+name: 'AI Provider'
+type: module
+description: 'Multi-provider AI abstraction layer. Routes requests to Grok (primary) or Claude (fallback).'
+core_version_requirement: ^10
+package: 'RareImagery'
+dependencies:
+  - drupal:jsonapi

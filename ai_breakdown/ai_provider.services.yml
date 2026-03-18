@@ -1,0 +1,15 @@
+services:
+  ai_provider.grok:
+    class: Drupal\ai_provider\Provider\GrokProvider
+    arguments: ['@http_client', '@logger.factory']
+
+  ai_provider.claude:
+    class: Drupal\ai_provider\Provider\ClaudeProvider
+    arguments: ['@http_client', '@logger.factory']
+
+  ai_provider.manager:
+    class: Drupal\ai_provider\AiProviderManager
+    arguments:
+      - '@ai_provider.grok'
+      - '@ai_provider.claude'
+      - '@logger.factory'

@@ -1,0 +1,10 @@
+ai_provider.generate:
+  path: '/jsonapi/ai-provider/generate'
+  defaults:
+    _controller: '\Drupal\ai_provider\Controller\AiGenerateController::generate'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
+  options:
+    _auth: ['cookie', 'oauth2']
+    no_cache: TRUE

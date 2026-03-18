@@ -7,14 +7,14 @@
 
 ## What Already Exists (No Rebuild Needed)
 
-The full build plan (`AI_CHATBOT_BUILD_PLAN.md`) assumes more new work than necessary. Here's what's already live and can be reused directly:
+Here's what's already live and can be reused directly:
 
 | Existing Component | File | Reuse For |
 |---|---|---|
 | Claude Haiku streaming API | `src/app/api/chat/route.ts` | Chatbot backend — already streams JSX via Haiku with rate limiting (10/hr) |
 | Builds CRUD API | `src/app/api/builds/route.ts` | "Apply to storefront" — already saves/loads/deletes builds in `field_page_builds` |
 | Drupal builds persistence | `src/lib/drupalBuilds.ts` | Storage layer — already handles JSON read/write to Drupal via cookie auth |
-| LivePreview renderer | `FloatingBuilder.tsx` → iframe + Babel | Preview pane — extract and share, don't rebuild |
+| LivePreview renderer | `src/components/builder/LivePreview.tsx` | Preview pane — already extracted as shared component |
 | Grok profile enhancement | `src/lib/grok.ts` | Creator context injection — `enhanceCreatorProfile()` already returns bio, products, theme, sentiment |
 | Dual-AI site generation | `src/lib/ai/generate-site.ts` | Orchestration pattern — Grok analyzes → Claude generates, with graceful fallback |
 | Theme generation + presets | `src/app/api/stores/generate-theme/route.ts` | Subculture awareness — 10 presets already wired with palettes + typography |
@@ -29,18 +29,10 @@ The full build plan (`AI_CHATBOT_BUILD_PLAN.md`) assumes more new work than nece
 | New Work | Priority | Effort |
 |---|---|---|
 | `SellerChatbot.tsx` — chat UI component | P0 | Medium |
-| Extract `LivePreview` into shared component | P0 | Small |
 | Extend `/api/chat` with creator context injection | P0 | Small |
 | "Post to X" compose intent button | P1 | Tiny |
 | Conversation history (session-only, in-memory) | P1 | Small |
 | Token usage display in chat | P2 | Small |
-
-**Explicitly deferred from MVP:**
-- ~~Drupal `ai_provider` service layer~~ — Not needed. Next.js already calls Claude/Grok directly.
-- ~~`ClaudeProvider.php`~~ — Not needed. Provider logic lives in Next.js, not Drupal.
-- ~~Rate limiting tiers / premium billing~~ — Ship free first, monetize after validation.
-- ~~Token usage logging entity in Drupal~~ — Console.anthropic.com dashboard is sufficient for now.
-- ~~Persistent conversation history~~ — Session-only for MVP; evaluate storage after user feedback.
 
 ---
 
@@ -59,34 +51,9 @@ The full build plan (`AI_CHATBOT_BUILD_PLAN.md`) assumes more new work than nece
 
 ## Sprint 1: Chat UI + Shared Preview (Core Loop)
 
-### 1A: Extract `LivePreview` into Shared Component
+### 1A: `SellerChatbot.tsx` — Chat Component
 
-**Current state:** Preview rendering is embedded inside `FloatingBuilder.tsx` (iframe + Babel transpilation).
-
-**Action:** Extract into `src/components/builder/LivePreview.tsx`
-
-```
-src/components/builder/
-├── FloatingBuilder.tsx    ← imports LivePreview (no behavior change)
-├── LivePreview.tsx        ← NEW: extracted shared preview component
-└── BuildLibrary.tsx       ← existing, no changes
-```
-
-**Props interface:**
-```typescript
-interface LivePreviewProps {
-  code: string;           // JSX/TSX string to render
-  isStreaming?: boolean;  // true = render partial output gracefully
-  className?: string;     // container styling
-}
-```
-
-**Key behavior:**
-- Renders code via iframe + Babel (same as current FloatingBuilder)
-- When `isStreaming=true`, catches JSON/JSX parse errors silently and renders last valid state
-- Debounces re-renders during streaming (100ms) to avoid flicker
-
-### 1B: `SellerChatbot.tsx` — Chat Component
+**LivePreview** is already extracted at `src/components/builder/LivePreview.tsx` — the chatbot imports it directly.
 
 **File:** `src/components/chatbot/SellerChatbot.tsx`
 
@@ -117,15 +84,15 @@ interface ChatState {
 }
 ```
 
-**Placement:** Add to store dashboard layout only (not public store pages).
+**Placement:** Add to console layout only (not public store pages).
 
 ```typescript
-// src/app/stores/[creator]/dashboard/layout.tsx (or equivalent)
+// src/app/console/layout.tsx (or equivalent)
 <FloatingBuilder ... />
 <SellerChatbot creatorSlug={creator} storeId={storeId} />
 ```
 
-### 1C: Wire to Existing `/api/chat` Route
+### 1B: Wire to Existing `/api/chat` Route
 
 **Current `/api/chat/route.ts` already does:**
 - Accepts messages array + theme context
@@ -268,23 +235,12 @@ src/components/chatbot/SellerChatbot.tsx     — Main chat component
 src/components/chatbot/ChatMessage.tsx       — Message bubble
 src/components/chatbot/ChatInput.tsx         — Input bar
 src/components/chatbot/ChatPreview.tsx       — Preview wrapper
-src/components/builder/LivePreview.tsx       — Extracted shared preview
 ```
 
 ### Modified Files
 ```
-src/components/builder/FloatingBuilder.tsx   — Import shared LivePreview instead of inline
 src/app/api/chat/route.ts                   — Add creatorContext to system prompt
-src/app/stores/[creator]/dashboard/...      — Add <SellerChatbot /> to layout
-```
-
-### No Changes Needed
-```
-src/app/api/builds/route.ts                 — Already handles save/load/delete
-src/lib/drupalBuilds.ts                     — Already handles Drupal persistence
-src/lib/drupal.ts                           — Already has auth + profile fetching
-src/lib/grok.ts                             — Already has profile enhancement
-src/lib/ai/generate-site.ts                 — Already has dual-AI orchestration
+src/app/console/layout.tsx                  — Add <SellerChatbot /> to layout
 ```
 
 ---
@@ -329,7 +285,6 @@ Creator types prompt in SellerChatbot
 |--------|--------|
 | Prompt → live preview | < 5 seconds to first render |
 | Full generation time | < 15 seconds |
-| Cost per generation | < $0.01 (Haiku pricing) |
 | Mobile usable | Works at 375px viewport |
 | Save works | Build appears in FloatingBuilder's Saved Builds tab |
 | No regressions | FloatingBuilder, theme gen, Grok import all still work |
@@ -367,8 +322,7 @@ Creator types prompt in SellerChatbot
 | Component | Lines | Files |
 |-----------|-------|-------|
 | `SellerChatbot.tsx` + sub-components | ~400 | 4 TSX |
-| `LivePreview.tsx` (extracted) | ~100 | 1 TSX |
 | `/api/chat` extension (creatorContext) | ~30 | 1 TS (modify) |
-| Dashboard layout integration | ~10 | 1 TSX (modify) |
+| Console layout integration | ~10 | 1 TSX (modify) |
 
-**~540 lines of new code across 5 new files + 2 modifications.** Everything else is already built.
+**~440 lines of new code across 4 new files + 2 modifications.** Everything else is already built.
