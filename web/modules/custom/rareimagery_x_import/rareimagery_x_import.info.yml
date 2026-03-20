@@ -7,3 +7,4 @@ dependencies:
   - node
   - commerce_store
   - key
+  - options

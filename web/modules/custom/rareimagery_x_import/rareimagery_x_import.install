@@ -1,0 +1,133 @@
+<?php
+
+declare(strict_types=1);
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
+
+/**
+ * Implements hook_install().
+ */
+function rareimagery_x_import_install(): void {
+  $bundle = 'x_import_profile_snapshot';
+
+  if (!NodeType::load($bundle)) {
+    $type = NodeType::create([
+      'type' => $bundle,
+      'name' => 'X Import Profile Snapshot',
+      'description' => 'Staging snapshot for X profile import runs before final profile/store writes.',
+      'new_revision' => FALSE,
+      'preview_mode' => 0,
+      'display_submitted' => FALSE,
+    ]);
+    $type->save();
+  }
+
+  _rareimagery_x_import_ensure_field($bundle, 'field_x_import_status', 'list_string', [
+    'label' => 'Import Status',
+    'required' => TRUE,
+    'default_value' => [['value' => 'pending']],
+    'storage_settings' => [
+      'allowed_values' => [
+        'pending' => 'Pending',
+        'success' => 'Success',
+        'failed' => 'Failed',
+      ],
+    ],
+  ]);
+
+  _rareimagery_x_import_ensure_field($bundle, 'field_x_import_username', 'string', [
+    'label' => 'X Username',
+    'required' => TRUE,
+    'storage_settings' => ['max_length' => 191],
+  ]);
+
+  _rareimagery_x_import_ensure_field($bundle, 'field_x_import_user_id', 'string', [
+    'label' => 'X User ID',
+    'required' => FALSE,
+    'storage_settings' => ['max_length' => 191],
+  ]);
+
+  _rareimagery_x_import_ensure_field($bundle, 'field_x_import_run_id', 'string', [
+    'label' => 'Import Run ID',
+    'required' => TRUE,
+    'storage_settings' => ['max_length' => 191],
+  ]);
+
+  _rareimagery_x_import_ensure_field($bundle, 'field_x_import_profile_uuid', 'string', [
+    'label' => 'Profile UUID',
+    'required' => FALSE,
+    'storage_settings' => ['max_length' => 191],
+  ]);
+
+  _rareimagery_x_import_ensure_field($bundle, 'field_x_import_store_uuid', 'string', [
+    'label' => 'Store UUID',
+    'required' => FALSE,
+    'storage_settings' => ['max_length' => 191],
+  ]);
+
+  _rareimagery_x_import_ensure_field($bundle, 'field_x_import_payload', 'string_long', [
+    'label' => 'Raw Import Payload',
+    'required' => FALSE,
+  ]);
+
+  _rareimagery_x_import_ensure_field($bundle, 'field_x_import_error', 'string_long', [
+    'label' => 'Import Error',
+    'required' => FALSE,
+  ]);
+}
+
+/**
+ * Ensures a field storage + field instance exists on bundle.
+ *
+ * @param string $bundle
+ *   Node bundle machine name.
+ * @param string $field_name
+ *   Field machine name.
+ * @param string $field_type
+ *   Drupal field type.
+ * @param array<string,mixed> $options
+ *   Optional field options.
+ */
+function _rareimagery_x_import_ensure_field(
+  string $bundle,
+  string $field_name,
+  string $field_type,
+  array $options = []
+): void {
+  $storage = FieldStorageConfig::loadByName('node', $field_name);
+  if (!$storage) {
+    $storage_values = [
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'type' => $field_type,
+      'cardinality' => 1,
+      'translatable' => FALSE,
+    ];
+
+    if (!empty($options['storage_settings']) && is_array($options['storage_settings'])) {
+      $storage_values['settings'] = $options['storage_settings'];
+    }
+
+    $storage = FieldStorageConfig::create($storage_values);
+    $storage->save();
+  }
+
+  $field = FieldConfig::loadByName('node', $bundle, $field_name);
+  if (!$field) {
+    $field_values = [
+      'field_storage' => $storage,
+      'bundle' => $bundle,
+      'label' => $options['label'] ?? $field_name,
+      'required' => (bool) ($options['required'] ?? FALSE),
+    ];
+
+    if (!empty($options['default_value']) && is_array($options['default_value'])) {
+      $field_values['default_value'] = $options['default_value'];
+    }
+
+    $field = FieldConfig::create($field_values);
+    $field->save();
+  }
+}
