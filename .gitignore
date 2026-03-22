@@ -26,6 +26,10 @@ frontend/.env.local
 
 # Secrets
 x-consumer-key.txt
+.secrets/*
+!.secrets/.gitkeep
+!.secrets/README.md
+!.secrets/site-credentials.example.txt
 
 # IDE
 .vscode/

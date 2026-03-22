@@ -6,10 +6,11 @@
 
 ## Active Project
 
-**Project:** Verify & Fix All Next.js ↔ Drupal Integration Paths
-**Status:** nearly complete
+**Project:** Verify & Fix All Next.js ↔ Drupal Integration Paths + Local Environment Refresh
+**Status:** refreshed & updated (2026-03-22)
 **Started:** 2026-03-10
-**Owner:** data-integration (lead), all agents involved
+**Last Updated:** 2026-03-22
+**Owner:** grok (current), data-integration (lead)
 
 ---
 

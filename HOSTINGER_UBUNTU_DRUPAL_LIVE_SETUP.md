@@ -31,19 +31,18 @@ nano .env
 sudo ufw allow 22
 sudo ufw allow 80
 sudo ufw allow 443
-sudo ufw allow 8080
 sudo ufw --force enable
 docker compose up -d
 
 # 5. Done!
-echo "Done! Open http://YOUR_SERVER_IP:8080 in browser and run the Drupal installer"
+echo "Done! Open http://YOUR_SERVER_IP in browser and run the Drupal installer"
 ```
 
 ---
 
 ## Drupal Installer Settings (in browser)
 
-When you open `http://YOUR_SERVER_IP:8080`, use these DB settings:
+When you open `http://YOUR_SERVER_IP`, use these DB settings:
 
 | Field | Value |
 |-------|-------|
