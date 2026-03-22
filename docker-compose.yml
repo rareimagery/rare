@@ -10,7 +10,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     networks:
       - marketplace-net
 
@@ -30,10 +30,8 @@ services:
     volumes:
       - ./web:/var/www/html
     ports:
-      - "${DRUPAL_PORT:-80}:80"
-    command: >
-      bash -c "chown -R www-data:www-data /var/www/html &&
-               apache2-foreground"
+      - "8080:80"
+    command: apache2-foreground
     networks:
       - marketplace-net
 
