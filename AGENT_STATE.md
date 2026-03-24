@@ -9,8 +9,8 @@
 **Project:** Verify & Fix All Next.js ↔ Drupal Integration Paths + Local Environment Refresh
 **Status:** refreshed & updated (2026-03-22)
 **Started:** 2026-03-10
-**Last Updated:** 2026-03-22
-**Owner:** grok (current), data-integration (lead)
+**Last Updated:** 2026-03-24
+**Owner:** grok (completed), data-integration (lead)
 
 ---
 
@@ -18,7 +18,7 @@
 
 | Agent | Status | Last Action | Blocked By |
 |-------|--------|-------------|------------|
-| nextjs-developer | idle | Fixed `PRODUCT_INCLUDES` for default type | — |
+| nextjs-developer | idle | Guided Builder UI simplified; pushed `rare-frontend` main | — |
 | drupal-api | idle | Fixed store permissions, CORS, back-refs, user fields, store status | — |
 | data-integration | idle | Audited all 27 endpoints, coordinated fixes | — |
 | brand-designer | idle | — | not needed for this project |
@@ -53,6 +53,7 @@
 | 12 | Verify `getAllProductSlugs()` iterates all 5 product types | data-integration | done | All 5 types return 200 with Basic Auth |
 | 13 | Test store theme update (both profile + store theme paths) | nextjs-developer | verified | Profile theme field works (all set to xai3). Store theme field is `string_long` for JSON |
 | 14 | Verify middleware subdomain rewrite works with Drupal data | nextjs-developer | verified | Middleware rewrites correctly, `getCreatorProfile()` resolves from Drupal |
+| 15 | Simplify Guided Builder step 1 (frontend) | nextjs-developer | done | Removed Pro / Refresh X / Import PFP / Import Products; removed per-field color pickers; presets only; require starter + scheme before step 2. Commit `6ef0b24` on `rare-frontend` main (Vercel deploy) |
 
 ---
 
@@ -65,6 +66,7 @@
 | 2026-03-10 | Auth priority: Basic Auth via `drupalAuthHeaders()` | Bearer token is fallback only | data-integration |
 | 2026-03-10 | `field_store_status` created as string field (not list_string) | Needed for store approval workflow, was entirely missing | drupal-api |
 | 2026-03-10 | Removed `field_categories,field_tags` from default product includes | These fields don't exist on `commerce_product/default`, only on clothing/crafts/digital_download | nextjs-developer |
+| 2026-03-24 | Guided Builder: no Pro mode; no manual X refresh/import buttons; theme via presets only | Broken/unused controls confused creators; PFP handled at account creation | nextjs-developer |
 
 ---
 
@@ -87,7 +89,13 @@
 
 ## Completed Projects
 
-(none yet — this project nearly complete, 2 items remain untested)
+**Verify & Fix All Next.js ↔ Drupal Integration Paths + Local Environment Refresh** (completed 2026-03-22)
+- Core API integration verified and fixed
+- Local Docker environment updated
+- Remaining: manual tests for file uploads and Stripe webhooks
+
+**Guided Builder storefront step 1** (shipped 2026-03-24)
+- `frontend` (`rare-frontend`): simplified first wizard step; pushed to `main` for production/Vercel
 
 ---
 
